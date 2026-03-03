@@ -1,0 +1,55 @@
+{
+    "book": "Éxodo",
+    "chapter": 4,
+    "title": "Señales para Moisés",
+    "messages": [
+        {
+            "id": "e4-m1",
+            "speaker": "Moisés",
+            "verse": 1,
+            "text": "He aquí que ellos no me creerán, ni oirán mi voz; porque dirán: No te ha aparecido Jehová."
+        },
+        {
+            "id": "e4-m2",
+            "speaker": "Dios",
+            "verse": 2,
+            "text": "¿Qué es eso que tienes en tu mano?"
+        },
+        {
+            "id": "e4-m3",
+            "speaker": "Moisés",
+            "verse": 2,
+            "text": "Una vara."
+        },
+        {
+            "id": "e4-m4",
+            "speaker": "Dios",
+            "verse": 3,
+            "text": "Échala en tierra."
+        },
+        {
+            "id": "e4-m5",
+            "speaker": "Narrador",
+            "verse": 3,
+            "text": "Y él la echó en tierra, y se hizo una culebra; y Moisés huía de ella."
+        },
+        {
+            "id": "e4-m6",
+            "speaker": "Dios",
+            "verse": 4,
+            "text": "Extiende tu mano, y tómala por la cola."
+        },
+        {
+            "id": "e4-m7",
+            "speaker": "Narrador",
+            "verse": 4,
+            "text": "Y él extendió su mano, y la tomó, y se volvió vara en su mano."
+        },
+        {
+            "id": "e4-m8",
+            "speaker": "Dios",
+            "verse": 5,
+            "text": "Por esto creerán que se te ha aparecido Jehová, el Dios de tus padres, el Dios de Abraham, Dios de Isaac y Dios de Jacob."
+        }
+    ]
+}

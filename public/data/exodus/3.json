@@ -1,0 +1,79 @@
+{
+    "book": "Éxodo",
+    "chapter": 3,
+    "title": "El Llamamiento de Moisés",
+    "messages": [
+        {
+            "id": "m1",
+            "speaker": "Narrador",
+            "verse": 1,
+            "text": "Apacentando Moisés las ovejas de Jetro su suegro, sacerdote de Madián, llevó las ovejas a través del desierto, y llegó hasta Horeb, monte de Dios."
+        },
+        {
+            "id": "m2",
+            "speaker": "Narrador",
+            "verse": 2,
+            "text": "Y se le apareció el Ángel de Jehová en una llama de fuego en medio de una zarza; y él miró, y vio que la zarza ardía en fuego, y la zarza no se consumía."
+        },
+        {
+            "id": "m3",
+            "speaker": "Moisés",
+            "verse": 3,
+            "text": "Iré yo ahora y veré esta grande visión, por qué causa la zarza no se quema."
+        },
+        {
+            "id": "m4",
+            "speaker": "Narrador",
+            "verse": 4,
+            "text": "Viendo Jehová que él iba a ver, lo llamó Dios de en medio de la zarza."
+        },
+        {
+            "id": "m5",
+            "speaker": "Dios",
+            "verse": 4,
+            "text": "¡Moisés, Moisés!"
+        },
+        {
+            "id": "m6",
+            "speaker": "Moisés",
+            "verse": 4,
+            "text": "Heme aquí."
+        },
+        {
+            "id": "m7",
+            "speaker": "Dios",
+            "verse": 5,
+            "text": "No te acerques; quita tu calzado de tus pies, porque el lugar en que tú estás, tierra santa es. Yo soy el Dios de tu padre, Dios de Abraham, Dios de Isaac, y Dios de Jacob."
+        },
+        {
+            "id": "m8",
+            "speaker": "Narrador",
+            "verse": 6,
+            "text": "Entonces Moisés cubrió su rostro, porque tuvo miedo de mirar a Dios."
+        },
+        {
+            "id": "m9",
+            "speaker": "Dios",
+            "verse": 7,
+            "text": "Bien he visto la aflicción de mi pueblo que está en Egipto, y he oído su clamor a causa de sus exactores; pues he conocido sus angustias."
+        },
+        {
+            "id": "m10",
+            "speaker": "Dios",
+            "verse": 10,
+            "text": "Ven, por tanto, ahora, y te enviaré a Faraón, para que saques de Egipto a mi pueblo, los hijos de Israel."
+        },
+        {
+            "id": "m11",
+            "speaker": "Moisés",
+            "verse": 11,
+            "text": "¿Quién soy yo para que vaya a Faraón, y saque de Egipto a los hijos de Israel?"
+        },
+        {
+            "id": "m12",
+            "speaker": "Dios",
+            "verse": 12,
+            "text": "Ve, porque yo estaré contigo; y esto te será por señal de que yo te he enviado: cuando hayas sacado de Egipto al pueblo, serviréis a Dios sobre este monte."
+        }
+    ]
+}

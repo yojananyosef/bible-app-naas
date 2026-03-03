@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Biblia NAAS - App de Ejemplo</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Space+Grotesk:wght@500;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React & ReactDOM CDNs -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Babel CDN for compiling JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            background-color: #FAFAFA;
+            color: #0A0A0A;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.025em;
+        }
+
+        .naas-border {
+            border: 2px solid #0A0A0A;
+        }
+
+        .naas-shadow {
+            box-shadow: 3px 3px 0 #0A0A0A;
+        }
+
+        .naas-shadow-sm {
+            box-shadow: 2px 2px 0 #0A0A0A;
+        }
+
+        .naas-interactive {
+            transition: all 150ms ease-out;
+        }
+
+        .naas-interactive:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0 #0A0A0A;
+        }
+    </style>
+</head>
+
+<body class="bg-[#FAFAFA] min-h-screen flex items-center justify-center p-4">
+
+    <div id="root" class="w-full max-w-md"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const EXODUS_3_CHAT = [
+            { id: 'm1', speaker: 'Narrador', verse: 1, text: 'Apacentando Moisés las ovejas de Jetro su suegro, sacerdote de Madián, llevó las ovejas a través del desierto, y llegó hasta Horeb, monte de Dios.' },
+            { id: 'm2', speaker: 'Narrador', verse: 2, text: 'Y se le apareció el Ángel de Jehová en una llama de fuego en medio de una zarza; y él miró, y vio que la zarza ardía en fuego, y la zarza no se consumía.' },
+            { id: 'm3', speaker: 'Moisés', verse: 3, text: 'Iré yo ahora y veré esta grande visión, por qué causa la zarza no se quema.' },
+            { id: 'm4', speaker: 'Narrador', verse: 4, text: 'Viendo Jehová que él iba a ver, lo llamó Dios de en medio de la zarza.' },
+            { id: 'm5', speaker: 'Dios', verse: 4, text: '¡Moisés, Moisés!' },
+            { id: 'm6', speaker: 'Moisés', verse: 4, text: 'Heme aquí.' },
+            { id: 'm7', speaker: 'Dios', verse: 5, text: 'No te acerques; quita tu calzado de tus pies, porque el lugar en que tú estás, tierra santa es. Yo soy el Dios de tu padre, Dios de Abraham, Dios de Isaac, y Dios de Jacob.' },
+            { id: 'm8', speaker: 'Narrador', verse: 6, text: 'Entonces Moisés cubrió su rostro, porque tuvo miedo de mirar a Dios.' },
+            { id: 'm9', speaker: 'Dios', verse: 7, text: 'Bien he visto la aflicción de mi pueblo que está en Egipto, y he oído su clamor a causa de sus exactores; pues he conocido sus angustias.' },
+            { id: 'm10', speaker: 'Dios', verse: 10, text: 'Ven, por tanto, ahora, y te enviaré a Faraón, para que saques de Egipto a mi pueblo, los hijos de Israel.' },
+            { id: 'm11', speaker: 'Moisés', verse: 11, text: '¿Quién soy yo para que vaya a Faraón, y saque de Egipto a los hijos de Israel?' },
+            { id: 'm12', speaker: 'Dios', verse: 12, text: 'Ve, porque yo estaré contigo; y esto te será por señal de que yo te he enviado: cuando hayas sacado de Egipto al pueblo, serviréis a Dios sobre este monte.' }
+        ];
+
+        function App() {
+            useEffect(() => {
+                lucide.createIcons();
+            }, []);
+
+            return (
+                <main className="w-full bg-white naas-border naas-shadow flex flex-col h-[85vh] relative overflow-hidden" data-viewport-scope="hero">
+
+                    {/* Header - AIDA Phase 1: Attention */}
+                    <header data-aida="attention" className="border-b-2 border-[#0A0A0A] bg-[#FAFAFA] shrink-0 p-4 sticky top-0 z-10 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <button className="p-1 hover:bg-[#EAEAEA] naas-border transition-colors">
+                                <i data-lucide="arrow-left" className="w-5 h-5 text-[#0A0A0A] stroke-[2.5]"></i>
+                            </button>
+                            <div className="flex flex-col">
+                                <h1 className="text-xl font-display font-black leading-none m-0">Éxodo 3</h1>
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest mt-1">Chat de Dios</span>
+                            </div>
+                        </div>
+                        <button className="p-1 hover:bg-[#EAEAEA] naas-border transition-colors">
+                            <i data-lucide="more-vertical" className="w-5 h-5 text-[#0A0A0A] stroke-[2.5]"></i>
+                        </button>
+                    </header>
+
+                    {/* Chat Feed - AIDA Phase 2: Interest */}
+                    <section data-aida="interest" className="flex-1 overflow-y-auto p-4 space-y-6 bg-[#FAFAFA] pb-32">
+
+                        <div className="text-center mb-6">
+                            <span className="inline-block bg-white naas-border naas-shadow-sm px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
+                                Monte Horeb
+                            </span>
+                        </div>
+
+                        {EXODUS_3_CHAT.map((msg) => {
+                            const isGod = msg.speaker === 'Dios';
+                            const isNarrator = msg.speaker === 'Narrador';
+
+                            if (isNarrator) {
+                                return (
+                                    <div key={msg.id} className="flex flex-col items-center my-6">
+                                        <div className="max-w-[85%] bg-[#EAEAEA] border border-dashed border-[#0A0A0A] p-3 text-sm font-medium text-center text-gray-800">
+                                            <span className="text-[10px] font-bold text-gray-500 block mb-1 uppercase tracking-widest">v.{msg.verse} Narrador</span>
+                                            {msg.text}
+                                        </div>
+                                    </div>
+                                );
+                            }
+
+                            return (
+                                <div key={msg.id} className={`flex flex-col mx-2 ${isGod ? 'items-start' : 'items-end'} w-full`}>
+                                    <div className={`flex items-end gap-2 max-w-[85%] ${isGod ? 'flex-row' : 'flex-row-reverse'}`}>
+
+                                        {/* Avatar */}
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 naas-border naas-shadow-sm
+                      ${isGod ? 'bg-[#FFD600]' : 'bg-white'}`}>
+                                            <span className="text-xs font-black">{msg.speaker[0]}</span>
+                                        </div>
+
+                                        {/* Chat Bubble */}
+                                        <div className={`naas-border p-3 flex flex-col relative
+                      ${isGod ? 'bg-white rounded-r-xl rounded-tl-xl' : 'bg-[#EAEAEA] rounded-l-xl rounded-tr-xl'}
+                      ${isGod ? 'naas-shadow-sm' : ''}
+                    `}>
+                                            <div className="flex items-center justify-between gap-6 mb-1">
+                                                <span className="text-[10px] font-black uppercase tracking-wider">{msg.speaker}</span>
+                                                <span className="text-[10px] font-bold text-gray-400">v.{msg.verse}</span>
+                                            </div>
+                                            <p className={`text-[15px] leading-snug m-0 ${isGod ? 'font-bold font-display' : 'font-medium'}`}>
+                                                {msg.text}
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </section>
+
+                    {/* Footer actions - AIDA Phase 4: Action */}
+                    <div className="absolute bottom-0 w-full left-0 p-4 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA] to-transparent pt-12">
+                        <button
+                            data-aida="action"
+                            data-cta="primary"
+                            className="w-full bg-[#FFD600] text-[#0A0A0A] py-3.5 px-4 flex items-center justify-center gap-2 naas-border naas-interactive font-black text-lg tracking-tight z-20 shadow-[3px_3px_0_#0A0A0A]"
+                        >
+                            <i data-lucide="book-open" className="w-5 h-5 mb-[2px] stroke-[2.5]"></i>
+                            Siguiente Capítulo
+                        </button>
+                    </div>
+
+                </main>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>

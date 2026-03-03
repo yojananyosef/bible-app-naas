@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#FAFAFA] text-[#0A0A0A] font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-[#0A0A0A];
+  }
+}
+
+@layer utilities {
+  .naas-border {
+    @apply border-2 border-[#0A0A0A];
+  }
+  .naas-shadow {
+    @apply shadow-[3px_3px_0_#0A0A0A];
+  }
+  .naas-shadow-sm {
+    @apply shadow-[2px_2px_0_#0A0A0A];
+  }
+  .naas-interactive {
+    @apply hover:-translate-y-[2px] hover:shadow-[5px_5px_0_#0A0A0A] transition-all duration-150 ease-out;
+  }
+}
