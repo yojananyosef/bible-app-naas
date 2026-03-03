@@ -1,0 +1,291 @@
+{
+    "book": "Génesis",
+    "chapter": 1,
+    "title": "La Creación",
+    "messages": [
+        {
+            "id": "g1_sec1",
+            "speaker": "Sistema",
+            "verse": 1,
+            "text": "La creación",
+            "isSectionTitle": true
+        },
+        {
+            "id": "g1_1",
+            "speaker": "Narrador",
+            "verse": 1,
+            "text": "En el principio, Dios creó los cielos y la tierra."
+        },
+        {
+            "id": "g1_2",
+            "speaker": "Narrador",
+            "verse": 2,
+            "text": "La tierra carecía de forma y estaba vacía; la oscuridad cubría la superficie del abismo y el Espíritu de Dios se movía sobre la superficie de las aguas."
+        },
+        {
+            "id": "g1_3a",
+            "speaker": "Narrador",
+            "verse": 3,
+            "text": "Y Dios dijo:"
+        },
+        {
+            "id": "g1_3b",
+            "speaker": "Dios",
+            "verse": 3,
+            "text": "¡Que haya luz!"
+        },
+        {
+            "id": "g1_3c",
+            "speaker": "Narrador",
+            "verse": 3,
+            "text": "y hubo luz."
+        },
+        {
+            "id": "g1_4",
+            "speaker": "Narrador",
+            "verse": 4,
+            "text": "Dios vio que la luz era buena, y separó a la luz de la oscuridad."
+        },
+        {
+            "id": "g1_5",
+            "speaker": "Narrador",
+            "verse": 5,
+            "text": "Entonces Dios llamó a la luz “día” y a la oscuridad le llamó “noche”. Así que hubo noche y mañana, lo cual fue el primer día."
+        },
+        {
+            "id": "g1_6a",
+            "speaker": "Narrador",
+            "verse": 6,
+            "text": "Entonces Dios dijo:"
+        },
+        {
+            "id": "g1_6b",
+            "speaker": "Dios",
+            "verse": 6,
+            "text": "Que haya expansión en medio de las aguas para dividirlas."
+        },
+        {
+            "id": "g1_7",
+            "speaker": "Narrador",
+            "verse": 7,
+            "text": "Así que Dios hizo una expansión para separar las aguas que estaban arriba de las aguas, de las aguas que estaban debajo. Y así sucedió."
+        },
+        {
+            "id": "g1_8",
+            "speaker": "Narrador",
+            "verse": 8,
+            "text": "Dios llamó a la expansión “cielo”. Entonces hubo noche y mañana, lo cual fue el segundo día."
+        },
+        {
+            "id": "g1_9a",
+            "speaker": "Narrador",
+            "verse": 9,
+            "text": "Dios dijo:"
+        },
+        {
+            "id": "g1_9b",
+            "speaker": "Dios",
+            "verse": 9,
+            "text": "Que las aguas que están debajo del cielo se junten en un solo lugar para que aparezca la tierra."
+        },
+        {
+            "id": "g1_9c",
+            "speaker": "Narrador",
+            "verse": 9,
+            "text": "Y así sucedió."
+        },
+        {
+            "id": "g1_10",
+            "speaker": "Narrador",
+            "verse": 10,
+            "text": "Entonces Dios llamó al suelo “tierra” y a las aguas les llamó “mares”. Y Dios vio que era bueno."
+        },
+        {
+            "id": "g1_11a",
+            "speaker": "Narrador",
+            "verse": 11,
+            "text": "Dios dijo:"
+        },
+        {
+            "id": "g1_11b",
+            "speaker": "Dios",
+            "verse": 11,
+            "text": "Que la tierra produzca vegetación: plantas que produzcan semillas y árboles que produzcan frutos con semillas, cada uno de su propia clase."
+        },
+        {
+            "id": "g1_11c",
+            "speaker": "Narrador",
+            "verse": 11,
+            "text": "Y así sucedió."
+        },
+        {
+            "id": "g1_12",
+            "speaker": "Narrador",
+            "verse": 12,
+            "text": "La tierra produjo vegetación: plantas que producen semillas y árboles que producen frutos con semillas, cada uno de su propia clase. Entonces Dios vio que era bueno."
+        },
+        {
+            "id": "g1_13",
+            "speaker": "Narrador",
+            "verse": 13,
+            "text": "Así que hubo noche y mañana, lo cual fue el tercer día."
+        },
+        {
+            "id": "g1_14a",
+            "speaker": "Narrador",
+            "verse": 14,
+            "text": "Dios dijo:"
+        },
+        {
+            "id": "g1_14b",
+            "speaker": "Dios",
+            "verse": 14,
+            "text": "Que haya luces en el cielo para separar el día de la noche, y para que exista una forma de marcar las estaciones, los días y los años. Habrá luces en el cielo que brillen sobre la tierra."
+        },
+        {
+            "id": "g1_15",
+            "speaker": "Narrador",
+            "verse": 15,
+            "text": "Y así sucedió."
+        },
+        {
+            "id": "g1_16",
+            "speaker": "Narrador",
+            "verse": 16,
+            "text": "Dios creó dos grandes luces:‡ la más grande a cargo del día, y la más pequeña a cargo de la noche. También creó las estrellas."
+        },
+        {
+            "id": "g1_17",
+            "speaker": "Narrador",
+            "verse": 17,
+            "text": "Dios puso estas luces en el cielo para que brillaran sobre la tierra, para que estuvieran a cargo del día y de la noche, y para separar la luz de la oscuridad. Y Dios vio que era bueno."
+        },
+        {
+            "id": "g1_19",
+            "speaker": "Narrador",
+            "verse": 19,
+            "text": "Así que hubo noche y mañana, lo cual fue el cuarto día."
+        },
+        {
+            "id": "g1_20a",
+            "speaker": "Narrador",
+            "verse": 20,
+            "text": "Y Dios dijo:"
+        },
+        {
+            "id": "g1_20b",
+            "speaker": "Dios",
+            "verse": 20,
+            "text": "Que las aguas se llenen de criaturas vivientes, y que las aves vuelen por encima de la tierra, en el cielo."
+        },
+        {
+            "id": "g1_21",
+            "speaker": "Narrador",
+            "verse": 21,
+            "text": "Así que Dios creó enormes animales marinos y todos los seres vivos que nadan y que habitan en las aguas, cada uno de su propia clase; así como cada ave que vuela, cada una según su especie. Y Dios vio que era bueno."
+        },
+        {
+            "id": "g1_22a",
+            "speaker": "Narrador",
+            "verse": 22,
+            "text": "Dios los bendijo y dijo:"
+        },
+        {
+            "id": "g1_22b",
+            "speaker": "Dios",
+            "verse": 22,
+            "text": "Reprodúzcanse y multiplíquense, y llenen las aguas del mar, y que se multipliquen las aves en toda la tierra."
+        },
+        {
+            "id": "g1_23",
+            "speaker": "Narrador",
+            "verse": 23,
+            "text": "Y así hubo noche y después mañana, lo cual fue el quinto día."
+        },
+        {
+            "id": "g1_24a",
+            "speaker": "Narrador",
+            "verse": 24,
+            "text": "Entonces Dios dijo:"
+        },
+        {
+            "id": "g1_24b",
+            "speaker": "Dios",
+            "verse": 24,
+            "text": "Que la tierra produzca criaturas vivientes, cada una según su especie: rebaños, ganado, las criaturas reptiles, los animales salvajes, cada uno de su propia clase."
+        },
+        {
+            "id": "g1_24c",
+            "speaker": "Narrador",
+            "verse": 24,
+            "text": "Y sucedió así."
+        },
+        {
+            "id": "g1_25",
+            "speaker": "Narrador",
+            "verse": 25,
+            "text": "Dios hizo a los animales salvajes, al ganado, y a los reptiles, a todos según su propia especie. Y Dios vio que esto era bueno."
+        },
+        {
+            "id": "g1_sec2",
+            "speaker": "Sistema",
+            "verse": 26,
+            "text": "Creación del hombre y de la mujer",
+            "isSectionTitle": true
+        },
+        {
+            "id": "g1_26a",
+            "speaker": "Narrador",
+            "verse": 26,
+            "text": "Entonces Dios dijo:"
+        },
+        {
+            "id": "g1_26b",
+            "speaker": "Dios",
+            "verse": 26,
+            "text": "Hagamos seres humanos según nuestra imagen, y que sean como nosotros. Ellos tendrán autoridad sobre los peces del mar y sobre las aves que vuelan por los aires, sobre los animales y sobre toda la tierra y las criaturas que se mueven sobre ella."
+        },
+        {
+            "id": "g1_27",
+            "speaker": "Narrador",
+            "verse": 27,
+            "text": "Así que Dios creó a los seres humanos según su propia imagen. Los creó a la imagen de Dios, como varón y hembra."
+        },
+        {
+            "id": "g1_28a",
+            "speaker": "Narrador",
+            "verse": 28,
+            "text": "Dios los bendijo y les dijo:"
+        },
+        {
+            "id": "g1_28b",
+            "speaker": "Dios",
+            "verse": 28,
+            "text": "Reprodúzcanse y multiplíquense; vayan por toda la tierra y gobiérnenla. Tengan autoridad sobre los peces que están en el mar y sobre las aves que vuelan por los aires, y sobre cada criatura que se mueve sobre la tierra."
+        },
+        {
+            "id": "g1_29a",
+            "speaker": "Narrador",
+            "verse": 29,
+            "text": "Y Dios dijo:"
+        },
+        {
+            "id": "g1_29b",
+            "speaker": "Dios",
+            "verse": 29,
+            "text": "Miren, les he dado como alimento cada planta que produce semilla de toda la tierra, y cada árbol que produce fruto con semilla. Todas las plantas verdes las he dado a todos los animales de la tierra, a las aves, y a cada criatura que se mueve sobre la tierra, es decir, a todo ser vivo."
+        },
+        {
+            "id": "g1_30",
+            "speaker": "Narrador",
+            "verse": 30,
+            "text": "Y así sucedió."
+        },
+        {
+            "id": "g1_31",
+            "speaker": "Narrador",
+            "verse": 31,
+            "text": "Entonces Dios vio todo lo que había creado, y una vez más vio que era muy bueno. Así hubo tarde y luego mañana, lo cual fue el sexto día."
+        }
+    ]
+}
