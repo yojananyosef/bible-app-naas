@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, MoreVertical, MessageSquare, Users, Book, ShieldCheck, RefreshCw } from 'lucide-react';
+import { Search, MoreVertical, MessageSquare, Users, Book, ShieldCheck, RefreshCw, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Constants & Types
 import { BIBLE_BOOKS } from './constants/books';
-import { BookInfo, Message } from './types/bible';
+import { BookInfo, Message, FavoriteMessage } from './types/bible';
 
 // Hooks
 import { useSettings } from './hooks/useSettings';
@@ -19,6 +19,7 @@ import { TypingIndicator } from './components/chat/TypingIndicator';
 import { ChatHeader } from './components/chat/ChatHeader';
 import { InputBar } from './components/chat/InputBar';
 import { GroupInfoDrawer } from './components/chat/GroupInfoDrawer';
+import { FavoritesDrawer } from './components/home/FavoritesDrawer';
 
 export default function App() {
     // --- Persistence & Settings ---
@@ -38,10 +39,13 @@ export default function App() {
     };
 
     const [currentChapter, setCurrentChapter] = useState(() => getInitialChapter(currentBookId));
-    const [likedMessages, setLikedMessages] = useState<Set<string>>(() => {
-        const saved = localStorage.getItem('likedMessages');
-        return saved ? new Set(JSON.parse(saved)) : new Set();
+    const [favorites, setFavorites] = useState<FavoriteMessage[]>(() => {
+        const saved = localStorage.getItem('bible_favorites');
+        return saved ? JSON.parse(saved) : [];
     });
+
+    const isMessageLiked = (msgId: string) =>
+        favorites.some(f => f.bookId === currentBookId && f.id === msgId);
 
     // --- Chat Logic ---
     const {
@@ -55,14 +59,23 @@ export default function App() {
     const [showSelector, setShowSelector] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
+    const [showHomeSearch, setShowHomeSearch] = useState(false);
+    const [homeSearchQuery, setHomeSearchQuery] = useState('');
+    const [showHomeOptions, setShowHomeOptions] = useState(false);
+    const [showFavorites, setShowFavorites] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    const filteredBooks = BIBLE_BOOKS.filter(b =>
+        b.name.toLowerCase().includes(homeSearchQuery.toLowerCase()) ||
+        b.category.toLowerCase().includes(homeSearchQuery.toLowerCase())
+    );
 
     // Persistence Effect
     useEffect(() => {
         localStorage.setItem('lastBook', currentBookId);
         localStorage.setItem(`lastChapter_${currentBookId}`, currentChapter.toString());
-        localStorage.setItem('likedMessages', JSON.stringify(Array.from(likedMessages)));
-    }, [currentBookId, currentChapter, likedMessages]);
+        localStorage.setItem('bible_favorites', JSON.stringify(favorites));
+    }, [currentBookId, currentChapter, favorites]);
 
     // Auto-scroll
     useEffect(() => {
@@ -76,14 +89,27 @@ export default function App() {
         setView('chat');
     };
 
-    const handleToggleLike = (id: string) => {
-        setLikedMessages(prev => {
-            const next = new Set(prev);
-            const key = `${currentBookId}_${id}`;
-            if (next.has(key)) next.delete(key);
-            else next.add(key);
-            return next;
-        });
+    const handleToggleLike = (id: string, overrideBookId?: string) => {
+        const targetBookId = overrideBookId || currentBookId;
+
+        // If it's a chat toggle, we have the message in 'data'
+        // If it's a drawer toggle, we find it in favorites
+        const existing = favorites.find(f => f.bookId === targetBookId && f.id === id);
+
+        if (existing) {
+            setFavorites(prev => prev.filter(f => !(f.bookId === targetBookId && f.id === id)));
+        } else {
+            const msg = data?.messages.find(m => m.id === id);
+            if (!msg || !bookConfig) return;
+
+            const fav: FavoriteMessage = {
+                ...msg,
+                bookId: currentBookId,
+                bookName: bookConfig.name,
+                chapter: currentChapter
+            };
+            setFavorites(prev => [...prev, fav]);
+        }
     };
 
     const handleNextChapter = () => {
@@ -100,15 +126,85 @@ export default function App() {
         return (
             <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center sm:p-4 md:p-8">
                 <main data-viewport-scope="home" className="w-full max-w-6xl bg-white border-4 border-[#0A0A0A] flex flex-col h-[100dvh] sm:h-[90vh] overflow-hidden shadow-[8px_8px_0_#0A0A0A] mx-auto font-sans">
-                    <header data-aida="attention" className="border-b-4 border-black bg-[#FFD600] p-6 flex items-center justify-between shrink-0">
+                    <header data-aida="attention" className="border-b-4 border-black bg-[#FFD600] p-6 flex items-center justify-between shrink-0 relative z-50">
                         <div className="flex flex-col text-left">
                             <h1 className="text-3xl font-black uppercase tracking-tighter leading-none italic">BIBLIA CHAT</h1>
                             <span className="text-[10px] font-black uppercase tracking-widest mt-1 opacity-100">Neo-AIDA Accessible System</span>
                         </div>
                         <div className="flex gap-4">
-                            <Surface className="p-2 rounded-full border-2"><Search className="w-5 h-5" /></Surface>
-                            <Surface className="p-2 rounded-full border-2"><MoreVertical className="w-5 h-5" /></Surface>
+                            <Surface
+                                onClick={() => { setShowHomeSearch(!showHomeSearch); if (showHomeSearch) setHomeSearchQuery(''); }}
+                                className={`p-2 rounded-full border-2 transition-colors ${showHomeSearch ? 'bg-black text-[#FFD600]' : ''}`}
+                            >
+                                <Search className="w-5 h-5" />
+                            </Surface>
+                            <div className="relative">
+                                <Surface
+                                    onClick={() => setShowHomeOptions(!showHomeOptions)}
+                                    className={`p-2 rounded-full border-2 transition-colors ${showHomeOptions ? 'bg-black text-[#FFD600]' : ''}`}
+                                >
+                                    <MoreVertical className="w-5 h-5" />
+                                </Surface>
+
+                                <AnimatePresence>
+                                    {showHomeOptions && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                            exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                                            className="absolute top-full right-0 mt-2 w-56 bg-white border-4 border-black shadow-[6px_6px_0_#0A0A0A] z-[100]"
+                                        >
+                                            <div className="bg-black text-white p-3 text-[10px] font-black uppercase tracking-widest">Centro de Control</div>
+                                            <div className="p-1">
+                                                <button
+                                                    onClick={() => { setShowFavorites(true); setShowHomeOptions(false); }}
+                                                    className="w-full text-left p-3 hover:bg-[#FFD600] font-black text-[10px] uppercase tracking-wider flex items-center gap-3 transition-colors border-2 border-transparent hover:border-black"
+                                                >
+                                                    <Heart className="w-4 h-4" /> Mensajes Destacados
+                                                </button>
+                                                <div className="border-t-2 border-black/10 my-1"></div>
+                                                <div className="p-3 opacity-30 select-none">
+                                                    <div className="text-[8px] font-black uppercase tracking-[0.2em] mb-1">Tu Perfil</div>
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-6 h-6 rounded-full border-2 border-black bg-white flex items-center justify-center text-[10px] font-black">D</div>
+                                                        <span className="text-[10px] font-black uppercase italic">Discípulo del Camino</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         </div>
+
+                        {/* Search Bar Overlay */}
+                        <AnimatePresence>
+                            {showHomeSearch && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    className="absolute inset-0 bg-[#FFD600] flex items-center p-6 gap-4"
+                                >
+                                    <div className="flex-1 relative">
+                                        <input
+                                            autoFocus
+                                            type="text"
+                                            value={homeSearchQuery}
+                                            onChange={(e) => setHomeSearchQuery(e.target.value)}
+                                            placeholder="BUSCAR LIBRO O CATEGORÍA..."
+                                            className="w-full bg-white border-4 border-black p-4 font-black uppercase tracking-tighter text-xl placeholder:text-gray-300 focus:outline-none shadow-[4px_4px_0_#0A0A0A]"
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={() => { setShowHomeSearch(false); setHomeSearchQuery(''); }}
+                                        className="bg-black text-white p-4 border-4 border-black font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-colors"
+                                    >
+                                        CERRAR
+                                    </button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </header>
 
                     <section data-aida="interest" className="flex-1 overflow-y-auto bg-white">
@@ -116,7 +212,7 @@ export default function App() {
                             Canal de Revelación Activo
                         </div>
                         <div className="">
-                            {BIBLE_BOOKS.map((book) => (
+                            {filteredBooks.map((book) => (
                                 <GroupListItem
                                     key={book.id}
                                     book={book}
@@ -124,6 +220,12 @@ export default function App() {
                                     onSelect={handleSelectBook}
                                 />
                             ))}
+                            {filteredBooks.length === 0 && (
+                                <div className="py-20 text-center opacity-40">
+                                    <div className="text-4xl mb-4">📜</div>
+                                    <p className="font-black uppercase text-xs tracking-[0.2em]">Libro no encontrado en el Canon</p>
+                                </div>
+                            )}
                         </div>
                     </section>
 
@@ -132,6 +234,13 @@ export default function App() {
                         <div className="flex flex-col items-center gap-1 opacity-20"><Users className="w-6 h-6" /><span className="text-[8px] font-black uppercase">COMMUNITY</span></div>
                         <div className="flex flex-col items-center gap-1 opacity-20"><Book className="w-6 h-6" /><span className="text-[8px] font-black uppercase">SCRIPTORIUM</span></div>
                     </nav>
+
+                    <FavoritesDrawer
+                        isOpen={showFavorites}
+                        onClose={() => setShowFavorites(false)}
+                        favorites={favorites}
+                        onToggleLike={handleToggleLike}
+                    />
                 </main>
             </div>
         );
@@ -168,7 +277,7 @@ export default function App() {
                                 {visibleMessages.map(msg => (
                                     <MessageBubble
                                         key={msg.id} message={msg}
-                                        isLiked={likedMessages.has(`${currentBookId}_${msg.id}`)}
+                                        isLiked={isMessageLiked(msg.id)}
                                         onToggleLike={handleToggleLike}
                                     />
                                 ))}

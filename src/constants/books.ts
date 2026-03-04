@@ -16,6 +16,60 @@ export const BIBLE_BOOKS: BookInfo[] = [
         category: 'Pentateuco',
         description: 'La liberación épica de Israel de la esclavitud en Egipto y la entrega de la Ley.',
         participants: ['Dios', 'Moisés', 'Narrador']
+    },
+    {
+        id: 'levitico',
+        name: 'Levítico',
+        availableChapters: [],
+        isLocked: true,
+        category: 'Pentateuco',
+        description: 'Leyes ceremoniales y santidad del pueblo de Dios.',
+        participants: ['Dios', 'Moisés']
+    },
+    {
+        id: 'numeros',
+        name: 'Números',
+        availableChapters: [],
+        isLocked: true,
+        category: 'Pentateuco',
+        description: 'El censo y el vagabundeo de Israel por el desierto.',
+        participants: ['Moisés']
+    },
+    {
+        id: 'deuteronomio',
+        name: 'Deuteronomio',
+        availableChapters: [],
+        isLocked: true,
+        category: 'Pentateuco',
+        description: 'Repetición de la ley y despedida de Moisés.',
+        participants: ['Moisés']
+    },
+    {
+        id: 'salmos',
+        name: 'Salmos',
+        availableChapters: [],
+        isLocked: true,
+        category: 'Poesía',
+        description: 'Cánticos de adoración, lamento y esperanza.',
+        participants: ['David', 'Asaf']
+    },
+    {
+        id: 'mateo',
+        name: 'Mateo',
+        availableChapters: [],
+        isLocked: true,
+        category: 'Evangelios',
+        description: 'El evangelio del Rey de los judíos.',
+        participants: ['Jesús', 'Mateo']
+    },
+    {
+        id: 'juan',
+        name: 'Juan',
+        availableChapters: [],
+        isLocked: true,
+        category: 'Evangelios',
+        description: 'El Hijo de Dios entre nosotros.',
+        participants: ['Jesús', 'Juan']
     }
 ];
 

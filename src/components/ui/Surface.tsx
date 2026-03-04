@@ -32,9 +32,9 @@ export const Surface: React.FC<SurfaceProps> = ({
             className={`
                 border-2 border-[#0A0A0A] 
                 transition-all duration-150 ease-out
-                ${isPrimary ? 'bg-[#FFD600]' : active ? 'bg-gray-100' : ''}
+                ${isPrimary ? 'bg-[#FFD600]' : active ? 'bg-gray-100' : className.includes('bg-') ? '' : 'bg-white'}
                 ${(onClick || onDoubleClick) ? `cursor-pointer ${elevation ? 'hover:-translate-y-0.5 shadow-[3px_3px_0_#0A0A0A]' : 'hover:bg-gray-50'} active:translate-y-0 active:shadow-none` : ''}
-                ${className.includes('bg-') ? className : `bg-white ${className}`}
+                ${className}
             `}
         >
             {children}
