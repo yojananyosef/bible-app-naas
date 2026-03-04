@@ -65,12 +65,11 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
         if (existing) {
             setFavorites(prev => prev.filter(f => !(f.bookId === targetBookId && f.id === id)));
         } else {
-            const rawMsg = data?.messages.find(m => m.id === id);
-            if (!rawMsg || !bookConfig) return;
-            const msg = rawMsg as any; // Type workaround for favorite object creation
+            const msgInstance = data?.messages.find(m => m.id === id);
+            if (!msgInstance || !bookConfig) return;
 
             setFavorites(prev => [...prev, {
-                ...msg,
+                ...msgInstance.toJSON(),
                 bookId: targetBookId,
                 bookName: bookConfig.name,
                 chapter: currentChapter

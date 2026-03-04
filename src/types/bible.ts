@@ -1,12 +1,8 @@
-export type Speaker = 'Narrador' | 'Dios' | 'Moisés' | 'Sistema';
+import { MessageData, Speaker } from '../core/domain/Message';
 
-export interface Message {
-    id: string;
-    speaker: Speaker;
-    text: string;
-    verse: number;
-    isSectionTitle?: boolean;
-}
+export type { Speaker };
+
+export interface Message extends MessageData { }
 
 export interface ChapterData {
     book: string;
