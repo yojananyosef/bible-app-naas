@@ -1,8 +1,25 @@
 import { useState, useEffect } from 'react';
-import { ChapterData, Message } from '../types/bible';
+import { Message } from '../core/domain/Message';
+import { ValidChapterData } from '../core/services/BibleDataService';
 
-export const useBibleChat = (book: string, chapter: number, speed: number, isActive: boolean, onMessageUpdate: (msg: Message) => void) => {
-    const [data, setData] = useState<ChapterData | null>(null);
+export interface UseBibleChatProps {
+    book: string;
+    chapter: number;
+    speed: number;
+    isActive: boolean;
+    loadChapterService: (bookId: string, chapter: number) => Promise<ValidChapterData>;
+    onMessageUpdate?: (msg: Message) => void;
+}
+
+export const useBibleChat = ({
+    book,
+    chapter,
+    speed,
+    isActive,
+    loadChapterService,
+    onMessageUpdate
+}: UseBibleChatProps) => {
+    const [data, setData] = useState<ValidChapterData | null>(null);
     const [currentIndex, setCurrentIndex] = useState(-1);
     const [isAdvancing, setIsAdvancing] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -13,30 +30,26 @@ export const useBibleChat = (book: string, chapter: number, speed: number, isAct
         setCurrentIndex(-1);
         setError(null);
 
-        fetch(`/data/${book}/${chapter}.json`)
-            .then(res => {
-                if (!res.ok) throw new Error(`El capítulo ${chapter} no pudo ser cargado.`);
-                return res.json();
-            })
-            .then((json: ChapterData) => {
+        loadChapterService(book, chapter)
+            .then(json => {
                 setData(json);
                 setCurrentIndex(0);
             })
             .catch(err => setError(err.message));
-    }, [book, chapter]);
+    }, [book, chapter, loadChapterService]);
 
     const visibleMessages = data ? data.messages.slice(0, currentIndex + 1) : [];
     const nextMessage = data && (currentIndex + 1 < data.messages.length) ? data.messages[currentIndex + 1] : null;
-    const isNextUser = nextMessage && (nextMessage.speaker !== 'Dios' && nextMessage.speaker !== 'Narrador' && !nextMessage.isSectionTitle);
+
+    // Domain behavior rules instead of primitives
+    const canAdvanceManually = nextMessage ? nextMessage.isHumanSpeaker() : false;
 
     // Auto-Advance Logic
     useEffect(() => {
-        if (!isActive || !nextMessage || isNextUser || !data) return;
+        if (!isActive || !nextMessage || canAdvanceManually || !data) return;
 
         let isMounted = true;
         const autoAdvance = async () => {
-            // ... timer calculations ...
-            // (I'll keep the actual logic from before, just adding the isActive guard)
             setIsAdvancing(true);
             const currentMessage = currentIndex >= 0 ? data.messages[currentIndex] : null;
 
@@ -52,7 +65,7 @@ export const useBibleChat = (book: string, chapter: number, speed: number, isAct
             let delay = 0;
             if (nextMessage.speaker === 'Narrador') {
                 delay = readingTime + (1000 * speed);
-            } else if (nextMessage.isSectionTitle) {
+            } else if (nextMessage.isTitle()) {
                 delay = readingTime * 0.5;
             } else {
                 delay = typingTime + (readingTime * 0.2 * speed);
@@ -66,18 +79,18 @@ export const useBibleChat = (book: string, chapter: number, speed: number, isAct
             if (isMounted && isActive) {
                 setCurrentIndex(prev => prev + 1);
                 setIsAdvancing(false);
-                onMessageUpdate(nextMessage);
+                if (onMessageUpdate) onMessageUpdate(nextMessage);
             }
         };
 
         autoAdvance();
         return () => { isMounted = false; setIsAdvancing(false); };
-    }, [nextMessage, isNextUser, currentIndex, data, speed, isActive]);
+    }, [nextMessage, canAdvanceManually, currentIndex, data, speed, isActive, onMessageUpdate]);
 
     const handleManualNext = () => {
-        if (!nextMessage || isAdvancing || !isNextUser) return;
+        if (!nextMessage || isAdvancing || !canAdvanceManually) return;
         setCurrentIndex(prev => prev + 1);
-        onMessageUpdate(nextMessage);
+        if (onMessageUpdate) onMessageUpdate(nextMessage);
     };
 
     const restartChapter = () => {
@@ -92,7 +105,7 @@ export const useBibleChat = (book: string, chapter: number, speed: number, isAct
         error,
         visibleMessages,
         nextMessage,
-        isNextUser,
+        canAdvanceManually,
         handleManualNext,
         restartChapter
     };

@@ -14,7 +14,8 @@ Una aplicación de lectura bíblica inmersiva diseñada bajo el sistema **Neo-AI
 
 ## 🛠️ Stack Tecnológico
 
-- **Framework:** React 18 + Vite
+- **Framework:** Next.js (App Router) + TypeScript
+- **Arquitectura:** Screaming Architecture (Dominio Aislado) + Clean Code / Principios SOLID
 - **Estilos:** Tailwind CSS (Diseño basado en utilidades)
 - **Animaciones:** Framer Motion (Transiciones fluidas y estados dinámicos)
 - **Iconos:** Lucide React
@@ -36,10 +37,11 @@ Una aplicación de lectura bíblica inmersiva diseñada bajo el sistema **Neo-AI
    ```bash
    bun run dev
    ```
+   (Abre http://localhost:3000)
 
 4. Construye para producción:
    ```bash
-   bun run build
+   bun run build && bun run start
    ```
 
 ## 📂 Estructura de Datos
