@@ -65,6 +65,34 @@ export default function App() {
     const [showFavorites, setShowFavorites] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
 
+    // --- Progression Logic (10 levels) ---
+    const getSpiritualLevel = (count: number) => {
+        const levels = [
+            { min: 0, title: 'Iniciado', rank: 'Nivel 1', color: '#FFFFFF', icon: 'I' },
+            { min: 3, title: 'Oyente Fiel', rank: 'Nivel 2', color: '#E8E8E8', icon: 'O' },
+            { min: 7, title: 'Buscador', rank: 'Nivel 3', color: '#D1D1D1', icon: 'B' },
+            { min: 15, title: 'Aprendiz', rank: 'Nivel 4', color: '#A3A3A3', icon: 'A' },
+            { min: 30, title: 'Seguidor', rank: 'Nivel 5', color: '#FFD600', icon: 'S' },
+            { min: 60, title: 'Discípulo', rank: 'Nivel 6', color: '#FCD34D', icon: 'D' },
+            { min: 100, title: 'Siervo', rank: 'Nivel 7', color: '#FBBF24', icon: 'V' },
+            { min: 180, title: 'Embajador', rank: 'Nivel 8', color: '#F59E0B', icon: 'E' },
+            { min: 300, title: 'Testigo', rank: 'Nivel 9', color: '#D97706', icon: 'T' },
+            { min: 500, title: 'Ungido', rank: 'Nivel 10', color: '#000000', icon: 'U', textColor: 'text-white' }
+        ];
+
+        const current = [...levels].reverse().find(l => count >= l.min) || levels[0];
+        const nextIdx = levels.indexOf(current) + 1;
+        const next = levels[nextIdx];
+
+        const progress = next
+            ? ((count - current.min) / (next.min - current.min)) * 100
+            : 100;
+
+        return { ...current, nextTitle: next?.title, progress };
+    };
+
+    const userLevel = getSpiritualLevel(favorites.length);
+
     const filteredBooks = BIBLE_BOOKS.filter(b =>
         b.name.toLowerCase().includes(homeSearchQuery.toLowerCase()) ||
         b.category.toLowerCase().includes(homeSearchQuery.toLowerCase())
@@ -152,7 +180,7 @@ export default function App() {
                                             initial={{ opacity: 0, scale: 0.9, y: 10 }}
                                             animate={{ opacity: 1, scale: 1, y: 0 }}
                                             exit={{ opacity: 0, scale: 0.9, y: 10 }}
-                                            className="absolute top-full right-0 mt-2 w-56 bg-white border-4 border-black shadow-[6px_6px_0_#0A0A0A] z-[100]"
+                                            className="absolute top-full right-0 mt-2 w-80 bg-white border-4 border-black shadow-[6px_6px_0_#0A0A0A] z-[100]"
                                         >
                                             <div className="bg-black text-white p-3 text-[10px] font-black uppercase tracking-widest">Centro de Control</div>
                                             <div className="p-1">
@@ -163,11 +191,57 @@ export default function App() {
                                                     <Heart className="w-4 h-4" /> Mensajes Destacados
                                                 </button>
                                                 <div className="border-t-2 border-black/10 my-1"></div>
-                                                <div className="p-3 opacity-30 select-none">
-                                                    <div className="text-[8px] font-black uppercase tracking-[0.2em] mb-1">Tu Perfil</div>
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-6 h-6 rounded-full border-2 border-black bg-white flex items-center justify-center text-[10px] font-black">D</div>
-                                                        <span className="text-[10px] font-black uppercase italic">Discípulo del Camino</span>
+                                                <div className="p-3">
+                                                    <div className="text-[9px] font-black uppercase tracking-[0.2em] mb-3 text-gray-500 border-b border-black/5 pb-1">Identidad Espiritual Neo-AIDA</div>
+
+                                                    <div className="bg-white border-4 border-black p-5 relative overflow-hidden">
+                                                        {/* Status Header - Cleaned up and maximized for titles */}
+                                                        <div className="flex gap-4 items-center mb-6">
+                                                            <div 
+                                                                className="w-12 h-16 shrink-0 border-4 border-black flex items-center justify-center text-2xl font-black shadow-[4px_4px_0_#000]"
+                                                                style={{ backgroundColor: userLevel.color, color: userLevel.textColor === 'text-white' ? 'white' : 'black' }}
+                                                            >
+                                                                {userLevel.icon}
+                                                            </div>
+                                                            <div className="flex flex-col min-w-0 flex-1">
+                                                                <div className="text-[18px] font-black uppercase italic tracking-tighter leading-tight mb-0.5 break-words">{userLevel.title}</div>
+                                                                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{userLevel.rank}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Progress Meter */}
+                                                        <div className="space-y-3">
+                                                            <div className="flex justify-between items-end">
+                                                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-gray-400">Estado de Sincronización</span>
+                                                                <span className="bg-black text-[#FFD600] px-2 py-0.5 text-[10px] font-black italic shadow-[2px_2px_0_rgba(0,0,0,0.1)]">{Math.floor(userLevel.progress)}%</span>
+                                                            </div>
+                                                            <div className="h-6 border-4 border-black bg-gray-100 p-1 shadow-inner">
+                                                                <motion.div 
+                                                                    initial={{ width: 0 }}
+                                                                    animate={{ width: `${userLevel.progress}%` }}
+                                                                    className="h-full bg-black"
+                                                                />
+                                                            </div>
+                                                            <div className="flex justify-between items-start pt-1">
+                                                                <div className="flex flex-col">
+                                                                    <div className="text-[12px] font-black uppercase italic leading-none">{favorites.length}</div>
+                                                                    <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                                                                        {favorites.length === 1 ? 'Versículo' : 'Versículos'}
+                                                                    </div>
+                                                                </div>
+                                                                {userLevel.nextTitle && (
+                                                                    <div className="text-right">
+                                                                        <div className="text-[8px] text-gray-400 font-black uppercase leading-none mb-1">Siguiente Consagración</div>
+                                                                        <div className="text-[11px] font-black uppercase italic text-black tracking-tight">{userLevel.nextTitle}</div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Decorative Elements */}
+                                                        <div className="absolute top-0 right-0 opacity-5 pointer-events-none p-1">
+                                                            <ShieldCheck className="w-20 h-20 rotate-12" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
