@@ -17,8 +17,9 @@ export class Message {
     get verse() { return this.data.verse; }
     get isSectionTitle() { return this.data.isSectionTitle; }
 
-    isHumanSpeaker(): boolean {
-        return this.speaker !== 'Dios' && this.speaker !== 'Narrador' && this.speaker !== 'Sistema';
+    isHuman(): boolean {
+        const systemSpeakers = ['Dios', 'Narrador', 'Sistema'];
+        return !systemSpeakers.includes(this.speaker) && !this.isTitle();
     }
 
     isTitle(): boolean {

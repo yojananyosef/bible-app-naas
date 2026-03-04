@@ -28,11 +28,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
     const { isMuted, setIsMuted, readingSpeed, setReadingSpeed } = useSettings();
     const { playPop } = useAudio(isMuted);
 
-    const {
-        currentBookId, currentChapter, setCurrentChapter,
-        currentMessageIndex, setCurrentMessageIndex,
-        favorites, setFavorites
-    } = usePersistentState();
+    const { currentBookId, currentChapter, setCurrentChapter, favorites, setFavorites } = usePersistentState();
     const { showInfo, setShowInfo } = useUIState();
 
     const [showSelector, setShowSelector] = useState(false);
@@ -51,11 +47,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
         book: currentBookId,
         chapter: currentChapter,
         speed: readingSpeed,
-        isActive: true, // We are in the chat view
+        isActive: true,
         loadChapterService: BibleDataService.loadChapter,
-        onMessageUpdate: onMessageNext,
-        initialIndex: currentMessageIndex,
-        onIndexChange: setCurrentMessageIndex
+        onMessageUpdate: onMessageNext
     });
 
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -115,12 +109,14 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
                             <RefreshCw className="w-10 h-10 mb-4 animate-spin" />
                             <p className="font-black uppercase text-xs">{error}</p>
                         </div>
-                    ) : (data && visibleMessages.length > 0) ? (
+                    ) : (data) ? (
                         <>
-                            <div className="flex flex-col items-center gap-2 mb-8 opacity-50 px-4">
-                                <div className="flex items-center gap-2 bg-gray-100 border-2 border-black/10 px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full"><ShieldCheck className="w-3 h-3" /> Grupo creado hace eones por el Espíritu Santo</div>
-                                <div className="flex items-center gap-2 bg-gray-100 border-2 border-black/10 px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full"><MessageSquare className="w-3 h-3" /> Has ingresado al grupo de {bookConfig?.name}</div>
-                            </div>
+                            {currentChapter === 1 && (
+                                <div className="flex flex-col items-center gap-2 mb-8 opacity-50 px-4">
+                                    <div className="flex items-center gap-2 bg-gray-100 border-2 border-black/10 px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full"><ShieldCheck className="w-3 h-3" /> Grupo creado hace eones por el Espíritu Santo</div>
+                                    <div className="flex items-center gap-2 bg-gray-100 border-2 border-black/10 px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full"><MessageSquare className="w-3 h-3" /> Has ingresado al grupo de {bookConfig?.name}</div>
+                                </div>
+                            )}
 
                             <AnimatePresence initial={false}>
                                 {visibleMessages.map(msg => (
@@ -132,7 +128,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
                                 ))}
                             </AnimatePresence>
 
-                            {nextMessage && isAdvancing && nextMessage.isHumanSpeaker() && (
+                            {nextMessage && isAdvancing && nextMessage.isHuman() && (
                                 <TypingIndicator speaker={nextMessage.speaker} isGod={nextMessage.speaker === 'Dios'} />
                             )}
                         </>
@@ -147,7 +143,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
                 <div className="absolute bottom-0 left-0 right-0 sm:relative">
                     <InputBar
                         nextMessage={nextMessage as any} isAdvancing={isAdvancing} isNextUser={canAdvanceManually}
-                        isComplete={!nextMessage && (currentIndex >= 0)} error={error}
+                        isComplete={!nextMessage && (currentIndex >= 0) && !!data} error={error}
                         onManualNext={handleManualNext} onNextChapter={handleNextChapter} onGoHome={onBack}
                     />
                 </div>

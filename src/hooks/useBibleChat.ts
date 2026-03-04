@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Message } from '../core/domain/Message';
 import { ValidChapterData } from '../core/services/BibleDataService';
 
@@ -9,8 +9,18 @@ export interface UseBibleChatProps {
     isActive: boolean;
     loadChapterService: (bookId: string, chapter: number) => Promise<ValidChapterData>;
     onMessageUpdate?: (msg: Message) => void;
-    initialIndex?: number;
-    onIndexChange?: (index: number) => void;
+}
+
+// Tiny helpers to read/write progress to localStorage
+function readProgress(book: string, chapter: number): number {
+    if (typeof window === 'undefined') return -1;
+    const v = localStorage.getItem(`chatProgress_${book}_${chapter}`);
+    return v !== null ? Number(v) : -1;
+}
+function writeProgress(book: string, chapter: number, index: number) {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem(`chatProgress_${book}_${chapter}`, index.toString());
+    }
 }
 
 export const useBibleChat = ({
@@ -19,40 +29,52 @@ export const useBibleChat = ({
     speed,
     isActive,
     loadChapterService,
-    onMessageUpdate,
-    initialIndex = -1,
-    onIndexChange
+    onMessageUpdate
 }: UseBibleChatProps) => {
     const [data, setData] = useState<ValidChapterData | null>(null);
-    const [currentIndex, setCurrentIndex] = useState(initialIndex);
+    const [currentIndex, setCurrentIndex] = useState(-1);
     const [isAdvancing, setIsAdvancing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Initial Fetch
+    // Persist progress whenever it changes
+    useEffect(() => {
+        if (currentIndex >= 0) {
+            writeProgress(book, chapter, currentIndex);
+        }
+    }, [book, chapter, currentIndex]);
+
+    // Initial Fetch — runs when book or chapter changes
     useEffect(() => {
         setData(null);
+        setCurrentIndex(-1);
+        setIsAdvancing(false);
         setError(null);
 
         loadChapterService(book, chapter)
             .then(json => {
                 setData(json);
-                // Use the initialIndex if valid, else start at 0
-                const resumeIdx = initialIndex >= 0 ? Math.min(initialIndex, json.messages.length - 1) : 0;
-                setCurrentIndex(resumeIdx);
+
+                // Check if we have saved progress for this book+chapter
+                const savedIdx = readProgress(book, chapter);
+
+                if (savedIdx >= 0 && savedIdx < json.messages.length) {
+                    // Resume from saved position
+                    setCurrentIndex(savedIdx);
+                } else {
+                    // Fresh start — check if the first message needs manual send
+                    const firstMsg = json.messages[0];
+                    const needsManualStart = firstMsg && (firstMsg.isHuman() || firstMsg.isTitle());
+                    setCurrentIndex(needsManualStart ? -1 : 0);
+                }
             })
             .catch(err => setError(err.message));
     }, [book, chapter, loadChapterService]);
 
-    // Lift the state change
-    useEffect(() => {
-        if (onIndexChange) onIndexChange(currentIndex);
-    }, [currentIndex, onIndexChange]);
-
     const visibleMessages = data ? data.messages.slice(0, currentIndex + 1) : [];
     const nextMessage = data && (currentIndex + 1 < data.messages.length) ? data.messages[currentIndex + 1] : null;
 
-    // Domain behavior rules instead of primitives
-    const canAdvanceManually = nextMessage ? (nextMessage.isHumanSpeaker() || nextMessage.isTitle()) : false;
+    // Domain behavior rules
+    const canAdvanceManually = nextMessage ? (nextMessage.isHuman() || nextMessage.isTitle()) : false;
 
     // Auto-Advance Logic
     useEffect(() => {
@@ -60,12 +82,13 @@ export const useBibleChat = ({
 
         let isMounted = true;
         const autoAdvance = async () => {
+            if (!isMounted) return;
+
             setIsAdvancing(true);
             const currentMessage = currentIndex >= 0 ? data.messages[currentIndex] : null;
 
             const charTimeReading = 80 * speed;
             const charTimeTyping = 60 * speed;
-
             const readingFloor = 2500 * speed;
             const typingFloor = 2000 * speed;
 
@@ -104,8 +127,13 @@ export const useBibleChat = ({
     };
 
     const restartChapter = () => {
-        setCurrentIndex(0);
+        if (!data) return;
+        const firstMsg = data.messages[0];
+        const needsManualStart = firstMsg && (firstMsg.isHuman() || firstMsg.isTitle());
+        setCurrentIndex(needsManualStart ? -1 : 0);
         setIsAdvancing(false);
+        // Clear saved progress
+        writeProgress(book, chapter, -1);
     };
 
     return {
