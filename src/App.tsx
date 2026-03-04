@@ -5,7 +5,6 @@ import { ChatView } from './views/ChatView';
 
 export default function App() {
     const [view, setView] = useState<'home' | 'chat'>('home');
-
     return (
         <UIStateProvider>
             {view === 'home' ? (
