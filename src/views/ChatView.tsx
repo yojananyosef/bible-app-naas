@@ -91,8 +91,8 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
     const subtitle = lastSectionTitle ? lastSectionTitle.text : (data?.title || '');
 
     return (
-        <div className="h-full bg-white flex items-center justify-center overflow-hidden font-sans">
-            <main data-viewport-scope="chat" className="w-full max-w-6xl bg-white flex flex-col h-full sm:h-[90vh] relative overflow-hidden sm:mx-auto sm:border-4 sm:border-[#0A0A0A] sm:shadow-[8px_8px_0_#0A0A0A]">
+        <div className="h-full w-full bg-white overflow-hidden font-sans">
+            <main data-viewport-scope="chat" className="w-full flex flex-col h-full relative overflow-hidden">
                 <ChatHeader
                     book={bookConfig} chapter={isMounted ? currentChapter : 1} subtitle={subtitle}
                     onBack={onBack}

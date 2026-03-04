@@ -43,8 +43,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenChat }) => {
     };
 
     return (
-        <div className="h-full bg-white flex items-center justify-center overflow-hidden">
-            <main data-viewport-scope="home" className="w-full max-w-6xl bg-white flex flex-col h-full sm:h-[90vh] overflow-hidden sm:border-4 sm:border-[#0A0A0A] sm:shadow-[8px_8px_0_#0A0A0A] sm:mx-auto font-sans">
+        <div className="h-full w-full bg-white overflow-hidden">
+            <main data-viewport-scope="home" className="w-full flex flex-col h-full overflow-hidden font-sans">
                 <header data-aida="attention" className="border-b-4 border-black bg-[#FFD600] shrink-0 relative z-50">
                     <div className="safe-top" />
                     <div className="px-6 py-4 flex items-center justify-between">
