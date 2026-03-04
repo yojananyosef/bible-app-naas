@@ -24,10 +24,10 @@ interface ChatHeaderProps {
 
 export const ChatHeader: React.FC<ChatHeaderProps> = (props) => {
     return (
-        <header className="border-b-4 border-[#0A0A0A] bg-[#FAFAFA] p-4 md:p-6 sticky top-0 z-50 flex items-center justify-between shrink-0 h-20 md:h-24 transition-all">
-            <div className="flex items-center gap-4 min-w-0 h-full">
-                <button onClick={props.onBack} className="p-2 border-2 border-black hover:bg-gray-100 transition-all shadow-[2px_2px_0_#0A0A0A] active:translate-y-0.5 active:shadow-none shrink-0">
-                    <ArrowLeft className="w-6 h-6 text-[#0A0A0A]" strokeWidth={2.5} />
+        <header className="border-b-4 border-[#0A0A0A] bg-white px-4 py-2 safe-top sticky top-0 z-50 flex items-center justify-between shrink-0 h-auto sm:h-24 md:h-24 transition-all overflow-visible">
+            <div className="flex items-center gap-3 min-w-0 h-full py-2">
+                <button onClick={props.onBack} className="p-2 border-2 border-black hover:bg-gray-100 transition-all shadow-[2px_2px_0_#0A0A0A] active:translate-y-0.5 active:shadow-none shrink-0 bg-white">
+                    <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-[#0A0A0A]" strokeWidth={2.5} />
                 </button>
                 <div className="min-w-0 text-left flex flex-col justify-center">
                     <button onClick={props.onToggleSelector} className="flex items-center gap-2 group max-w-full outline-none">

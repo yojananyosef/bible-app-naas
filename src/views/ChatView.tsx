@@ -91,8 +91,8 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
     const subtitle = lastSectionTitle ? lastSectionTitle.text : (data?.title || '');
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center sm:p-4 md:p-8 font-sans">
-            <main data-viewport-scope="chat" className="w-full max-w-6xl bg-white border-4 border-[#0A0A0A] shadow-[8px_8px_0_#0A0A0A] flex flex-col h-[100dvh] sm:h-[90vh] relative overflow-hidden mx-auto">
+        <div className="h-full bg-white flex items-center justify-center overflow-hidden font-sans">
+            <main data-viewport-scope="chat" className="w-full max-w-6xl bg-white flex flex-col h-full sm:h-[90vh] relative overflow-hidden sm:mx-auto sm:border-4 sm:border-[#0A0A0A] sm:shadow-[8px_8px_0_#0A0A0A]">
                 <ChatHeader
                     book={bookConfig} chapter={isMounted ? currentChapter : 1} subtitle={subtitle}
                     onBack={onBack}
@@ -104,7 +104,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
                     isOptionsOpen={showOptions} onToggleOptions={() => setShowOptions(!showOptions)}
                 />
 
-                <section ref={scrollRef} className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 bg-[#FAFAFA] space-y-12 scroll-smooth pb-40">
+                <section ref={scrollRef} className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 bg-white space-y-10 sm:space-y-12 scroll-smooth pb-32 no-scrollbar">
                     {error ? (
                         <div className="py-20 flex flex-col items-center opacity-40 italic">
                             <RefreshCw className="w-10 h-10 mb-4 animate-spin" />
@@ -112,9 +112,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
                         </div>
                     ) : (data && visibleMessages.length > 0) ? (
                         <>
-                            <div className="flex flex-col items-center gap-3 mb-10 opacity-60">
-                                <div className="flex items-center gap-2 bg-gray-200 border-2 border-black px-4 py-1 text-[10px] font-black uppercase tracking-widest"><ShieldCheck className="w-3 h-3" /> Grupo creado hace eones por el Espíritu Santo</div>
-                                <div className="flex items-center gap-2 bg-gray-200 border-2 border-black px-4 py-1 text-[10px] font-black uppercase tracking-widest"><MessageSquare className="w-3 h-3" /> Has ingresado al grupo de {bookConfig?.name}</div>
+                            <div className="flex flex-col items-center gap-2 mb-8 opacity-50 px-4">
+                                <div className="flex items-center gap-2 bg-gray-100 border-2 border-black/10 px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full"><ShieldCheck className="w-3 h-3" /> Grupo creado hace eones por el Espíritu Santo</div>
+                                <div className="flex items-center gap-2 bg-gray-100 border-2 border-black/10 px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full"><MessageSquare className="w-3 h-3" /> Has ingresado al grupo de {bookConfig?.name}</div>
                             </div>
 
                             <AnimatePresence initial={false}>
@@ -139,11 +139,13 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
                     )}
                 </section>
 
-                <InputBar
-                    nextMessage={nextMessage as any} isAdvancing={isAdvancing} isNextUser={canAdvanceManually}
-                    isComplete={!nextMessage && (currentIndex >= 0)} error={error}
-                    onManualNext={handleManualNext} onNextChapter={handleNextChapter} onGoHome={onBack}
-                />
+                <div className="absolute bottom-0 left-0 right-0 sm:relative">
+                    <InputBar
+                        nextMessage={nextMessage as any} isAdvancing={isAdvancing} isNextUser={canAdvanceManually}
+                        isComplete={!nextMessage && (currentIndex >= 0)} error={error}
+                        onManualNext={handleManualNext} onNextChapter={handleNextChapter} onGoHome={onBack}
+                    />
+                </div>
 
                 <GroupInfoDrawer isOpen={showInfo} book={bookConfig} onClose={() => setShowInfo(false)} />
             </main>

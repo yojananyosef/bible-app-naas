@@ -43,24 +43,24 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenChat }) => {
     };
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center sm:p-4 md:p-8">
-            <main data-viewport-scope="home" className="w-full max-w-6xl bg-white border-4 border-[#0A0A0A] flex flex-col h-[100dvh] sm:h-[90vh] overflow-hidden shadow-[8px_8px_0_#0A0A0A] mx-auto font-sans">
-                <header data-aida="attention" className="border-b-4 border-black bg-[#FFD600] p-6 flex items-center justify-between shrink-0 relative z-50">
+        <div className="h-full bg-white flex items-center justify-center overflow-hidden">
+            <main data-viewport-scope="home" className="w-full max-w-6xl bg-white flex flex-col h-full sm:h-[90vh] overflow-hidden sm:border-4 sm:border-[#0A0A0A] sm:shadow-[8px_8px_0_#0A0A0A] sm:mx-auto font-sans">
+                <header data-aida="attention" className="border-b-4 border-black bg-[#FFD600] px-6 py-4 safe-top flex items-center justify-between shrink-0 relative z-50">
                     <div className="flex flex-col text-left">
-                        <h1 className="text-3xl font-black uppercase tracking-tighter leading-none italic">BIBLIA CHAT</h1>
-                        <span className="text-[10px] font-black uppercase tracking-widest mt-1 opacity-100">Neo-AIDA Accessible System</span>
+                        <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter leading-none italic">BIBLIA CHAT</h1>
+                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest mt-1 opacity-100">Neo-AIDA Accessible System</span>
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex gap-3">
                         <Surface
                             onClick={() => { setShowHomeSearch(!showHomeSearch); if (showHomeSearch) setQuery(''); }}
-                            className={`p-2 rounded-full border-2 transition-colors ${showHomeSearch ? 'bg-black text-[#FFD600]' : ''}`}
+                            className={`p-2 rounded-full border-2 transition-colors active:scale-95 ${showHomeSearch ? 'bg-black text-[#FFD600]' : 'bg-white'}`}
                         >
                             <Search className="w-5 h-5" />
                         </Surface>
                         <div className="relative">
                             <Surface
                                 onClick={() => setShowHomeOptions(!showHomeOptions)}
-                                className={`p-2 rounded-full border-2 transition-colors ${showHomeOptions ? 'bg-black text-[#FFD600]' : ''}`}
+                                className={`p-2 rounded-full border-2 transition-colors active:scale-95 ${showHomeOptions ? 'bg-black text-[#FFD600]' : 'bg-white'}`}
                             >
                                 <MoreVertical className="w-5 h-5" />
                             </Surface>
@@ -71,13 +71,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenChat }) => {
                                         initial={{ opacity: 0, scale: 0.9, y: 10 }}
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0, scale: 0.9, y: 10 }}
-                                        className="absolute top-full right-0 mt-2 w-80 bg-white border-4 border-black shadow-[6px_6px_0_#0A0A0A] z-[100]"
+                                        className="absolute top-full right-0 mt-2 w-[85vw] sm:w-80 bg-white border-4 border-black shadow-[6px_6px_0_#0A0A0A] z-[100]"
                                     >
                                         <div className="bg-black text-white p-3 text-[10px] font-black uppercase tracking-widest">Centro de Control</div>
                                         <div className="p-1">
                                             <button
                                                 onClick={() => { setShowFavorites(true); setShowHomeOptions(false); }}
-                                                className="w-full text-left p-3 hover:bg-[#FFD600] font-black text-[10px] uppercase tracking-wider flex items-center gap-3 transition-colors border-2 border-transparent hover:border-black"
+                                                className="w-full text-left p-4 hover:bg-[#FFD600] active:bg-[#FFD600] font-black text-[10px] uppercase tracking-wider flex items-center gap-3 transition-colors border-2 border-transparent hover:border-black"
                                             >
                                                 <Heart className="w-4 h-4" /> Mensajes Destacados
                                             </button>
@@ -145,7 +145,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenChat }) => {
                                 initial={{ opacity: 0, y: -20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
-                                className="absolute inset-0 bg-[#FFD600] flex items-center p-6 gap-4"
+                                className="absolute inset-0 bg-[#FFD600] safe-top flex items-center px-4 gap-3 z-[60]"
                             >
                                 <div className="flex-1 relative">
                                     <input
@@ -153,13 +153,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenChat }) => {
                                         type="text"
                                         value={homeSearchQuery}
                                         onChange={(e) => setQuery(e.target.value)}
-                                        placeholder="BUSCAR LIBRO O CATEGORÍA..."
-                                        className="w-full bg-white border-4 border-black p-4 font-black uppercase tracking-tighter text-xl placeholder:text-gray-300 focus:outline-none shadow-[4px_4px_0_#0A0A0A]"
+                                        placeholder="BUSCAR LIBRO..."
+                                        className="w-full bg-white border-4 border-black p-3 font-black uppercase tracking-tighter text-lg placeholder:text-gray-300 focus:outline-none shadow-[4px_4px_0_#0A0A0A]"
                                     />
                                 </div>
                                 <button
                                     onClick={() => { setShowHomeSearch(false); setQuery(''); }}
-                                    className="bg-black text-white p-4 border-4 border-black font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-colors"
+                                    className="bg-black text-white px-4 py-3 border-4 border-black font-black uppercase text-[10px] tracking-widest active:scale-95 transition-transform"
                                 >
                                     CERRAR
                                 </button>
@@ -168,11 +168,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenChat }) => {
                     </AnimatePresence>
                 </header>
 
-                <section data-aida="interest" className="flex-1 overflow-y-auto bg-white">
-                    <div className="italic p-4 text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest bg-gray-50 border-b-2 border-gray-100">
+                <section data-aida="interest" className="flex-1 overflow-y-auto bg-white no-scrollbar">
+                    <div className="italic py-3 text-center text-[9px] text-gray-400 font-bold uppercase tracking-widest bg-gray-50 border-b-2 border-gray-100">
                         Canal de Revelación Activo
                     </div>
-                    <div className="">
+                    <div className="pb-24">
                         {filteredBooks.map((book) => (
                             <GroupListItem
                                 key={book.id}
@@ -190,10 +190,19 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenChat }) => {
                     </div>
                 </section>
 
-                <nav data-aida="action" className="border-t-4 border-black bg-[#FAFAFA] p-4 flex justify-around items-center shrink-0">
-                    <div className="flex flex-col items-center gap-1 cursor-pointer"><MessageSquare className="w-6 h-6" /><span className="text-[8px] font-black uppercase">CHATS</span></div>
-                    <div className="flex flex-col items-center gap-1 opacity-20"><Users className="w-6 h-6" /><span className="text-[8px] font-black uppercase">COMMUNITY</span></div>
-                    <div className="flex flex-col items-center gap-1 opacity-20"><Book className="w-6 h-6" /><span className="text-[8px] font-black uppercase">SCRIPTORIUM</span></div>
+                <nav data-aida="action" className="fixed bottom-0 left-0 right-0 sm:absolute border-t-4 border-black bg-white/95 backdrop-blur-md px-6 py-3 pb-safe flex justify-around items-center shrink-0 z-50">
+                    <button className="flex flex-col items-center gap-1.5 transition-transform active:scale-90">
+                        <MessageSquare className="w-6 h-6" />
+                        <span className="text-[10px] font-black uppercase tracking-tighter">CHATS</span>
+                    </button>
+                    <button className="flex flex-col items-center gap-1.5 opacity-20 grayscale transition-transform active:scale-90">
+                        <Users className="w-6 h-6" />
+                        <span className="text-[10px] font-black uppercase tracking-tighter">COMMUNITY</span>
+                    </button>
+                    <button className="flex flex-col items-center gap-1.5 opacity-20 grayscale transition-transform active:scale-90">
+                        <Book className="w-6 h-6" />
+                        <span className="text-[10px] font-black uppercase tracking-tighter">SCRIPTORIUM</span>
+                    </button>
                 </nav>
 
                 <FavoritesDrawer

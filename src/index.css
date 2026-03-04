@@ -9,8 +9,13 @@
     --intent-action: #FFD600;
   }
 
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
   body {
-    @apply bg-[#FAFAFA] text-[#0A0A0A] font-sans antialiased;
+    @apply bg-white text-[#0A0A0A] font-sans antialiased overflow-hidden select-none touch-pan-y;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -19,27 +24,16 @@
 }
 
 @layer utilities {
-  .font-display {
-    font-family: 'Space Grotesk', sans-serif;
-  }
-  
-  .font-sans {
-    font-family: 'Inter', sans-serif;
-  }
+  .font-display { font-family: 'Space Grotesk', sans-serif; }
+  .font-sans { font-family: 'Inter', sans-serif; }
+  .naas-border { @apply border-2 border-[#0A0A0A]; }
+  .naas-shadow { @apply shadow-[3px_3px_0_#0A0A0A]; }
+  .naas-shadow-lg { @apply shadow-[6px_6px_0_#0A0A0A]; }
+  .naas-interactive { @apply transition-all duration-150 ease-out hover:-translate-y-0.5 active:translate-y-0 active:shadow-none; }
 
-  .naas-border {
-    @apply border-2 border-[#0A0A0A];
-  }
-  
-  .naas-shadow {
-    @apply shadow-[3px_3px_0_#0A0A0A];
-  }
-  
-  .naas-shadow-lg {
-    @apply shadow-[6px_6px_0_#0A0A0A];
-  }
-
-  .naas-interactive {
-    @apply transition-all duration-150 ease-out hover:-translate-y-0.5 active:translate-y-0 active:shadow-none;
-  }
+  /* Native Mobile Polish */
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
