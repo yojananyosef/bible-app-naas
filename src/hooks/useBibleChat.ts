@@ -42,7 +42,7 @@ export const useBibleChat = ({
     const nextMessage = data && (currentIndex + 1 < data.messages.length) ? data.messages[currentIndex + 1] : null;
 
     // Domain behavior rules instead of primitives
-    const canAdvanceManually = nextMessage ? nextMessage.isHumanSpeaker() : false;
+    const canAdvanceManually = nextMessage ? (nextMessage.isHumanSpeaker() || nextMessage.isTitle()) : false;
 
     // Auto-Advance Logic
     useEffect(() => {

@@ -38,6 +38,12 @@ export const usePersistentState = () => {
         const initialChap = getInitialChapter(id);
         setCurrentBookId(id);
         setCurrentChapter(initialChap);
+
+        // Force immediate localStorage update to prevent hydration mismatches or stale state on route/view change
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('lastBook', id);
+            localStorage.setItem(`lastChapter_${id}`, initialChap.toString());
+        }
     };
 
     return {
