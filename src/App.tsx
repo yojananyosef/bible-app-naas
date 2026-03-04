@@ -152,9 +152,9 @@ export default function App() {
     // --- Render Logic ---
     if (view === 'home') {
         return (
-            <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center sm:p-4 md:p-8">
-                <main data-viewport-scope="home" className="w-full max-w-6xl bg-white border-4 border-[#0A0A0A] flex flex-col h-[100dvh] sm:h-[90vh] overflow-hidden shadow-[8px_8px_0_#0A0A0A] mx-auto font-sans">
-                    <header data-aida="attention" className="border-b-4 border-black bg-[#FFD600] p-6 flex items-center justify-between shrink-0 relative z-50">
+            <div className="min-h-screen sm:bg-[#FAFAFA] bg-white flex items-center justify-center sm:p-4 md:p-8">
+                <main data-viewport-scope="home" className="w-full bg-white flex flex-col h-[100dvh] overflow-hidden sm:max-w-6xl sm:border-4 sm:border-[#0A0A0A] sm:h-[90vh] sm:shadow-[8px_8px_0_#0A0A0A] sm:mx-auto font-sans">
+                    <header data-aida="attention" className="border-b-4 border-black bg-[#FFD600] p-5 sm:p-6 flex items-center justify-between shrink-0 relative z-50">
                         <div className="flex flex-col text-left">
                             <h1 className="text-3xl font-black uppercase tracking-tighter leading-none italic">BIBLIA CHAT</h1>
                             <span className="text-[10px] font-black uppercase tracking-widest mt-1 opacity-100">Neo-AIDA Accessible System</span>
@@ -258,7 +258,7 @@ export default function App() {
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -20 }}
-                                    className="absolute inset-0 bg-[#FFD600] flex items-center p-6 gap-4"
+                                    className="absolute inset-0 bg-[#FFD600] flex items-center p-3 sm:p-6 gap-2 sm:gap-4"
                                 >
                                     <div className="flex-1 relative">
                                         <input
@@ -266,13 +266,13 @@ export default function App() {
                                             type="text"
                                             value={homeSearchQuery}
                                             onChange={(e) => setHomeSearchQuery(e.target.value)}
-                                            placeholder="BUSCAR LIBRO O CATEGORÍA..."
-                                            className="w-full bg-white border-4 border-black p-4 font-black uppercase tracking-tighter text-xl placeholder:text-gray-300 focus:outline-none shadow-[4px_4px_0_#0A0A0A]"
+                                            placeholder="BUSCAR LIBRO..."
+                                            className="w-full bg-white border-2 sm:border-4 border-black p-3 sm:p-4 font-black uppercase tracking-tighter text-sm sm:text-xl placeholder:text-gray-300 focus:outline-none shadow-[2px_2px_0_#0A0A0A] sm:shadow-[4px_4px_0_#0A0A0A]"
                                         />
                                     </div>
                                     <button
                                         onClick={() => { setShowHomeSearch(false); setHomeSearchQuery(''); }}
-                                        className="bg-black text-white p-4 border-4 border-black font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-colors"
+                                        className="bg-black text-white p-3 sm:p-4 border-2 sm:border-4 border-black font-black uppercase text-[10px] sm:text-xs tracking-widest hover:bg-white hover:text-black transition-colors shrink-0"
                                     >
                                         CERRAR
                                     </button>
@@ -324,8 +324,8 @@ export default function App() {
     const subtitle = lastSectionTitle ? lastSectionTitle.text : (data?.title || '');
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center sm:p-4 md:p-8 font-sans">
-            <main data-viewport-scope="chat" className="w-full max-w-6xl bg-white border-4 border-[#0A0A0A] shadow-[8px_8px_0_#0A0A0A] flex flex-col h-[100dvh] sm:h-[90vh] relative overflow-hidden mx-auto">
+        <div className="min-h-screen sm:bg-[#FAFAFA] bg-white flex items-center justify-center sm:p-4 md:p-8 font-sans">
+            <main data-viewport-scope="chat" className="w-full bg-white flex flex-col h-[100dvh] relative overflow-hidden sm:max-w-6xl sm:border-4 sm:border-[#0A0A0A] sm:shadow-[8px_8px_0_#0A0A0A] sm:h-[90vh] sm:mx-auto">
                 <ChatHeader
                     book={bookConfig} chapter={currentChapter} subtitle={subtitle}
                     onBack={() => setView('home')}
