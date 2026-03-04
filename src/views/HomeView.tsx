@@ -45,97 +45,100 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenChat }) => {
     return (
         <div className="h-full bg-white flex items-center justify-center overflow-hidden">
             <main data-viewport-scope="home" className="w-full max-w-6xl bg-white flex flex-col h-full sm:h-[90vh] overflow-hidden sm:border-4 sm:border-[#0A0A0A] sm:shadow-[8px_8px_0_#0A0A0A] sm:mx-auto font-sans">
-                <header data-aida="attention" className="border-b-4 border-black bg-[#FFD600] px-6 py-4 safe-top flex items-center justify-between shrink-0 relative z-50">
-                    <div className="flex flex-col text-left">
-                        <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter leading-none italic">BIBLIA CHAT</h1>
-                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest mt-1 opacity-100">Neo-AIDA Accessible System</span>
-                    </div>
-                    <div className="flex gap-3">
-                        <Surface
-                            onClick={() => { setShowHomeSearch(!showHomeSearch); if (showHomeSearch) setQuery(''); }}
-                            className={`p-2 rounded-full border-2 transition-colors active:scale-95 ${showHomeSearch ? 'bg-black text-[#FFD600]' : 'bg-white'}`}
-                        >
-                            <Search className="w-5 h-5" />
-                        </Surface>
-                        <div className="relative">
+                <header data-aida="attention" className="border-b-4 border-black bg-[#FFD600] shrink-0 relative z-50">
+                    <div className="safe-top" />
+                    <div className="px-6 py-4 flex items-center justify-between">
+                        <div className="flex flex-col text-left">
+                            <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter leading-none italic">BIBLIA CHAT</h1>
+                            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest mt-1 opacity-100">Neo-AIDA Accessible System</span>
+                        </div>
+                        <div className="flex gap-3">
                             <Surface
-                                onClick={() => setShowHomeOptions(!showHomeOptions)}
-                                className={`p-2 rounded-full border-2 transition-colors active:scale-95 ${showHomeOptions ? 'bg-black text-[#FFD600]' : 'bg-white'}`}
+                                onClick={() => { setShowHomeSearch(!showHomeSearch); if (showHomeSearch) setQuery(''); }}
+                                className={`p-2 rounded-full border-2 transition-colors active:scale-95 ${showHomeSearch ? 'bg-black text-[#FFD600]' : 'bg-white'}`}
                             >
-                                <MoreVertical className="w-5 h-5" />
+                                <Search className="w-5 h-5" />
                             </Surface>
+                            <div className="relative">
+                                <Surface
+                                    onClick={() => setShowHomeOptions(!showHomeOptions)}
+                                    className={`p-2 rounded-full border-2 transition-colors active:scale-95 ${showHomeOptions ? 'bg-black text-[#FFD600]' : 'bg-white'}`}
+                                >
+                                    <MoreVertical className="w-5 h-5" />
+                                </Surface>
 
-                            <AnimatePresence>
-                                {showHomeOptions && (
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                                        exit={{ opacity: 0, scale: 0.9, y: 10 }}
-                                        className="absolute top-full right-0 mt-2 w-[85vw] sm:w-80 bg-white border-4 border-black shadow-[6px_6px_0_#0A0A0A] z-[100]"
-                                    >
-                                        <div className="bg-black text-white p-3 text-[10px] font-black uppercase tracking-widest">Centro de Control</div>
-                                        <div className="p-1">
-                                            <button
-                                                onClick={() => { setShowFavorites(true); setShowHomeOptions(false); }}
-                                                className="w-full text-left p-4 hover:bg-[#FFD600] active:bg-[#FFD600] font-black text-[10px] uppercase tracking-wider flex items-center gap-3 transition-colors border-2 border-transparent hover:border-black"
-                                            >
-                                                <Heart className="w-4 h-4" /> Mensajes Destacados
-                                            </button>
-                                            <div className="border-t-2 border-black/10 my-1"></div>
-                                            <div className="p-3">
-                                                <div className="text-[9px] font-black uppercase tracking-[0.2em] mb-3 text-gray-500 border-b border-black/5 pb-1">Identidad Espiritual Neo-AIDA</div>
+                                <AnimatePresence>
+                                    {showHomeOptions && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                            exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                                            className="absolute top-full right-0 mt-2 w-[85vw] sm:w-80 bg-white border-4 border-black shadow-[6px_6px_0_#0A0A0A] z-[100]"
+                                        >
+                                            <div className="bg-black text-white p-3 text-[10px] font-black uppercase tracking-widest">Centro de Control</div>
+                                            <div className="p-1">
+                                                <button
+                                                    onClick={() => { setShowFavorites(true); setShowHomeOptions(false); }}
+                                                    className="w-full text-left p-4 hover:bg-[#FFD600] active:bg-[#FFD600] font-black text-[10px] uppercase tracking-wider flex items-center gap-3 transition-colors border-2 border-transparent hover:border-black"
+                                                >
+                                                    <Heart className="w-4 h-4" /> Mensajes Destacados
+                                                </button>
+                                                <div className="border-t-2 border-black/10 my-1"></div>
+                                                <div className="p-3">
+                                                    <div className="text-[9px] font-black uppercase tracking-[0.2em] mb-3 text-gray-500 border-b border-black/5 pb-1">Identidad Espiritual Neo-AIDA</div>
 
-                                                <div className="bg-white border-4 border-black p-5 relative overflow-hidden">
-                                                    <div className="flex gap-4 items-center mb-6">
-                                                        <div
-                                                            className="w-12 h-16 shrink-0 border-4 border-black flex items-center justify-center text-2xl font-black shadow-[4px_4px_0_#000]"
-                                                            style={{ backgroundColor: userLevel.color, color: userLevel.textColor === 'text-white' ? 'white' : 'black' }}
-                                                        >
-                                                            {userLevel.icon}
-                                                        </div>
-                                                        <div className="flex flex-col min-w-0 flex-1">
-                                                            <div className="text-[18px] font-black uppercase italic tracking-tighter leading-tight mb-0.5 break-words">{userLevel.title}</div>
-                                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{userLevel.rank}</div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="space-y-3">
-                                                        <div className="flex justify-between items-end">
-                                                            <span className="text-[9px] font-black uppercase tracking-[0.15em] text-gray-400">Estado de Sincronización</span>
-                                                            <span className="bg-black text-[#FFD600] px-2 py-0.5 text-[10px] font-black italic shadow-[2px_2px_0_rgba(0,0,0,0.1)]">{Math.floor(userLevel.progress)}%</span>
-                                                        </div>
-                                                        <div className="h-6 border-4 border-black bg-gray-100 p-1 shadow-inner">
-                                                            <motion.div
-                                                                initial={{ width: 0 }}
-                                                                animate={{ width: `${userLevel.progress}%` }}
-                                                                className="h-full bg-black"
-                                                            />
-                                                        </div>
-                                                        <div className="flex justify-between items-start pt-1">
-                                                            <div className="flex flex-col">
-                                                                <div className="text-[12px] font-black uppercase italic leading-none">{favorites.length}</div>
-                                                                <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-1">
-                                                                    {favorites.length === 1 ? 'Versículo' : 'Versículos'}
-                                                                </div>
+                                                    <div className="bg-white border-4 border-black p-5 relative overflow-hidden">
+                                                        <div className="flex gap-4 items-center mb-6">
+                                                            <div
+                                                                className="w-12 h-16 shrink-0 border-4 border-black flex items-center justify-center text-2xl font-black shadow-[4px_4px_0_#000]"
+                                                                style={{ backgroundColor: userLevel.color, color: userLevel.textColor === 'text-white' ? 'white' : 'black' }}
+                                                            >
+                                                                {userLevel.icon}
                                                             </div>
-                                                            {userLevel.nextTitle && (
-                                                                <div className="text-right">
-                                                                    <div className="text-[8px] text-gray-400 font-black uppercase leading-none mb-1">Siguiente Consagración</div>
-                                                                    <div className="text-[11px] font-black uppercase italic text-black tracking-tight">{userLevel.nextTitle}</div>
-                                                                </div>
-                                                            )}
+                                                            <div className="flex flex-col min-w-0 flex-1">
+                                                                <div className="text-[18px] font-black uppercase italic tracking-tighter leading-tight mb-0.5 break-words">{userLevel.title}</div>
+                                                                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{userLevel.rank}</div>
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div className="absolute top-0 right-0 opacity-5 pointer-events-none p-1">
-                                                        <ShieldCheck className="w-20 h-20 rotate-12" />
+                                                        <div className="space-y-3">
+                                                            <div className="flex justify-between items-end">
+                                                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-gray-400">Estado de Sincronización</span>
+                                                                <span className="bg-black text-[#FFD600] px-2 py-0.5 text-[10px] font-black italic shadow-[2px_2px_0_rgba(0,0,0,0.1)]">{Math.floor(userLevel.progress)}%</span>
+                                                            </div>
+                                                            <div className="h-6 border-4 border-black bg-gray-100 p-1 shadow-inner">
+                                                                <motion.div
+                                                                    initial={{ width: 0 }}
+                                                                    animate={{ width: `${userLevel.progress}%` }}
+                                                                    className="h-full bg-black"
+                                                                />
+                                                            </div>
+                                                            <div className="flex justify-between items-start pt-1">
+                                                                <div className="flex flex-col">
+                                                                    <div className="text-[12px] font-black uppercase italic leading-none">{favorites.length}</div>
+                                                                    <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                                                                        {favorites.length === 1 ? 'Versículo' : 'Versículos'}
+                                                                    </div>
+                                                                </div>
+                                                                {userLevel.nextTitle && (
+                                                                    <div className="text-right">
+                                                                        <div className="text-[8px] text-gray-400 font-black uppercase leading-none mb-1">Siguiente Consagración</div>
+                                                                        <div className="text-[11px] font-black uppercase italic text-black tracking-tight">{userLevel.nextTitle}</div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="absolute top-0 right-0 opacity-5 pointer-events-none p-1">
+                                                            <ShieldCheck className="w-20 h-20 rotate-12" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         </div>
                     </div>
 
