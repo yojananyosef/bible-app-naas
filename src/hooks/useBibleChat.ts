@@ -9,6 +9,8 @@ export interface UseBibleChatProps {
     isActive: boolean;
     loadChapterService: (bookId: string, chapter: number) => Promise<ValidChapterData>;
     onMessageUpdate?: (msg: Message) => void;
+    initialIndex?: number;
+    onIndexChange?: (index: number) => void;
 }
 
 export const useBibleChat = ({
@@ -17,26 +19,34 @@ export const useBibleChat = ({
     speed,
     isActive,
     loadChapterService,
-    onMessageUpdate
+    onMessageUpdate,
+    initialIndex = -1,
+    onIndexChange
 }: UseBibleChatProps) => {
     const [data, setData] = useState<ValidChapterData | null>(null);
-    const [currentIndex, setCurrentIndex] = useState(-1);
+    const [currentIndex, setCurrentIndex] = useState(initialIndex);
     const [isAdvancing, setIsAdvancing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // Initial Fetch
     useEffect(() => {
         setData(null);
-        setCurrentIndex(-1);
         setError(null);
 
         loadChapterService(book, chapter)
             .then(json => {
                 setData(json);
-                setCurrentIndex(0);
+                // Use the initialIndex if valid, else start at 0
+                const resumeIdx = initialIndex >= 0 ? Math.min(initialIndex, json.messages.length - 1) : 0;
+                setCurrentIndex(resumeIdx);
             })
             .catch(err => setError(err.message));
     }, [book, chapter, loadChapterService]);
+
+    // Lift the state change
+    useEffect(() => {
+        if (onIndexChange) onIndexChange(currentIndex);
+    }, [currentIndex, onIndexChange]);
 
     const visibleMessages = data ? data.messages.slice(0, currentIndex + 1) : [];
     const nextMessage = data && (currentIndex + 1 < data.messages.length) ? data.messages[currentIndex + 1] : null;
@@ -88,7 +98,7 @@ export const useBibleChat = ({
     }, [nextMessage, canAdvanceManually, currentIndex, data, speed, isActive, onMessageUpdate]);
 
     const handleManualNext = () => {
-        if (!nextMessage || isAdvancing || !canAdvanceManually) return;
+        if (!nextMessage || isAdvancing || !canAdvanceManually || !data) return;
         setCurrentIndex(prev => prev + 1);
         if (onMessageUpdate) onMessageUpdate(nextMessage);
     };

@@ -17,7 +17,14 @@ export const usePersistentState = () => {
         return book.availableChapters.includes(savedVal) ? savedVal : (book.availableChapters[0] || 1);
     };
 
+    const getInitialIndex = (bookId: string, chapter: number) => {
+        if (typeof window === 'undefined') return -1;
+        const saved = localStorage.getItem(`lastIndex_${bookId}_${chapter}`);
+        return saved ? Number(saved) : -1;
+    };
+
     const [currentChapter, setCurrentChapter] = useState<number>(() => getInitialChapter(currentBookId));
+    const [currentMessageIndex, setCurrentMessageIndex] = useState<number>(() => getInitialIndex(currentBookId, currentChapter));
 
     const [favorites, setFavorites] = useState<FavoriteMessage[]>(() => {
         if (typeof window === 'undefined') return [];
@@ -30,19 +37,29 @@ export const usePersistentState = () => {
         if (typeof window !== 'undefined') {
             localStorage.setItem('lastBook', currentBookId);
             localStorage.setItem(`lastChapter_${currentBookId}`, currentChapter.toString());
+            localStorage.setItem(`lastIndex_${currentBookId}_${currentChapter}`, currentMessageIndex.toString());
             localStorage.setItem('bible_favorites', JSON.stringify(favorites));
         }
-    }, [currentBookId, currentChapter, favorites]);
+    }, [currentBookId, currentChapter, currentMessageIndex, favorites]);
+
+    // Handle index reset/load when book or chapter changes
+    useEffect(() => {
+        const idx = getInitialIndex(currentBookId, currentChapter);
+        setCurrentMessageIndex(idx);
+    }, [currentBookId, currentChapter]);
 
     const changeBook = (id: string) => {
         const initialChap = getInitialChapter(id);
+        const initialIdx = getInitialIndex(id, initialChap);
         setCurrentBookId(id);
         setCurrentChapter(initialChap);
+        setCurrentMessageIndex(initialIdx);
 
         // Force immediate localStorage update to prevent hydration mismatches or stale state on route/view change
         if (typeof window !== 'undefined') {
             localStorage.setItem('lastBook', id);
             localStorage.setItem(`lastChapter_${id}`, initialChap.toString());
+            localStorage.setItem(`lastIndex_${id}_${initialChap}`, initialIdx.toString());
         }
     };
 
@@ -50,6 +67,8 @@ export const usePersistentState = () => {
         currentBookId,
         currentChapter,
         setCurrentChapter,
+        currentMessageIndex,
+        setCurrentMessageIndex,
         favorites,
         setFavorites,
         changeBook,

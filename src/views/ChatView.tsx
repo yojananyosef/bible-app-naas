@@ -28,7 +28,11 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
     const { isMuted, setIsMuted, readingSpeed, setReadingSpeed } = useSettings();
     const { playPop } = useAudio(isMuted);
 
-    const { currentBookId, currentChapter, setCurrentChapter, favorites, setFavorites } = usePersistentState();
+    const {
+        currentBookId, currentChapter, setCurrentChapter,
+        currentMessageIndex, setCurrentMessageIndex,
+        favorites, setFavorites
+    } = usePersistentState();
     const { showInfo, setShowInfo } = useUIState();
 
     const [showSelector, setShowSelector] = useState(false);
@@ -49,7 +53,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
         speed: readingSpeed,
         isActive: true, // We are in the chat view
         loadChapterService: BibleDataService.loadChapter,
-        onMessageUpdate: onMessageNext
+        onMessageUpdate: onMessageNext,
+        initialIndex: currentMessageIndex,
+        onIndexChange: setCurrentMessageIndex
     });
 
     const scrollRef = useRef<HTMLDivElement>(null);
