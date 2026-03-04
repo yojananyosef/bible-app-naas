@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, MoreVertical, BookOpen, Send, Heart } from 'lucide-react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { ArrowLeft, MoreVertical, BookOpen, Send, Heart, Book, ChevronDown, RefreshCw, MessageSquare, ShieldCheck, Users, Search, CheckCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type Speaker = 'Narrador' | 'Dios' | 'Moisés' | 'Sistema';
@@ -19,7 +19,32 @@ interface ChapterData {
     messages: Message[];
 }
 
-// Typing indicator (Now static while waiting for user interaction)
+interface BookInfo {
+    id: string;
+    name: string;
+    availableChapters: number[];
+    category: string;
+    description: string;
+}
+
+const BIBLE_BOOKS: BookInfo[] = [
+    {
+        id: 'genesis',
+        name: 'Génesis',
+        availableChapters: [1],
+        category: 'Pentateuco',
+        description: 'El libro de los comienzos: la creación, la caída y la promesa.'
+    },
+    {
+        id: 'exodus',
+        name: 'Éxodo',
+        availableChapters: [3, 4],
+        category: 'Pentateuco',
+        description: 'La liberación de Egipto y el encuentro con Dios en el Sinaí.'
+    }
+];
+
+// Typing indicator
 const TypingIndicator = ({ speaker, isGod }: { speaker: string; isGod: boolean }) => (
     <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 10 }}
@@ -27,13 +52,10 @@ const TypingIndicator = ({ speaker, isGod }: { speaker: string; isGod: boolean }
         exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
         className={`flex items-end gap-2 md:gap-4 max-w-[85%] sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl ${isGod ? 'flex-row' : 'flex-row-reverse'} mx-2 md:mx-4 lg:mx-6 w-full mt-4 md:mt-6 transition-all duration-300`}
     >
-        {/* Avatar */}
         <div className={`w-8 h-8 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center shrink-0 naas-border naas-shadow-sm
       ${isGod ? 'bg-[#FFD600]' : 'bg-white'}`}>
             <span className="text-xs md:text-sm lg:text-base font-black">{speaker[0]}</span>
         </div>
-
-        {/* Bubble */}
         <div className={`naas-border p-3 md:p-5 lg:p-6 flex flex-col relative transition-all duration-300
       ${isGod ? 'bg-white rounded-r-xl rounded-tl-xl md:rounded-r-2xl md:rounded-tl-2xl lg:rounded-r-3xl lg:rounded-tl-3xl' : 'bg-[#EAEAEA] rounded-l-xl rounded-tr-xl md:rounded-l-2xl md:rounded-tr-2xl lg:rounded-l-3xl lg:rounded-tr-3xl'}
       ${isGod ? 'naas-shadow-sm md:shadow-[4px_4px_0_#0A0A0A]' : ''}
@@ -51,106 +73,155 @@ const TypingIndicator = ({ speaker, isGod }: { speaker: string; isGod: boolean }
 );
 
 export default function App() {
+    // Persistent States
+    const [view, setView] = useState<'home' | 'chat'>('home');
+    const [currentBook, setCurrentBook] = useState(() => localStorage.getItem('lastBook') || 'genesis');
+
+    const getInitialChapter = (bookId: string) => {
+        const saved = localStorage.getItem(`lastChapter_${bookId}`);
+        const book = BIBLE_BOOKS.find(b => b.id === bookId);
+        if (!book) return 1;
+        const savedLevel = saved ? Number(saved) : -1;
+        if (book.availableChapters.includes(savedLevel)) return savedLevel;
+        return book.availableChapters[0] || 1;
+    };
+
+    const [currentChapter, setCurrentChapter] = useState(() => getInitialChapter(currentBook));
+
+    const [likedMessages, setLikedMessages] = useState<Set<string>>(() => {
+        const saved = localStorage.getItem('likedMessages');
+        return saved ? new Set(JSON.parse(saved)) : new Set();
+    });
+
+    // Session States
     const [data, setData] = useState<ChapterData | null>(null);
     const [currentIndex, setCurrentIndex] = useState(-1);
-    const [likedMessages, setLikedMessages] = useState<Set<string>>(new Set());
     const [isAdvancing, setIsAdvancing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [showChapterSelector, setShowChapterSelector] = useState(false);
+    const [showSystemLogs, setShowSystemLogs] = useState(false);
 
     const scrollRef = useRef<HTMLDivElement>(null);
-    const [currentBook, setCurrentBook] = useState('genesis');
-    const [currentChapter, setCurrentChapter] = useState(1);
+    const popAudio = useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+        popAudio.current = new Audio('/sounds/pop.mp3');
+        if (popAudio.current) popAudio.current.volume = 0.3;
+    }, []);
+
+    const playPop = () => {
+        if (popAudio.current && view === 'chat') {
+            popAudio.current.currentTime = 0;
+            popAudio.current.play().catch(() => { });
+        }
+    };
+
+    // Persistence Effect
+    useEffect(() => {
+        localStorage.setItem('lastBook', currentBook);
+        localStorage.setItem(`lastChapter_${currentBook}`, currentChapter.toString());
+        localStorage.setItem('likedMessages', JSON.stringify(Array.from(likedMessages)));
+    }, [currentBook, currentChapter, likedMessages]);
+
+    // Reset session when going home
+    useEffect(() => {
+        if (view === 'home') {
+            setData(null);
+            setCurrentIndex(-1);
+            setIsAdvancing(false);
+            setShowSystemLogs(false);
+        }
+    }, [view]);
 
     // Fetch JSON data
     useEffect(() => {
+        if (view !== 'chat') return;
         setData(null);
+        setError(null);
         setCurrentIndex(-1);
-        setLikedMessages(new Set());
+
         fetch(`/data/${currentBook}/${currentChapter}.json`)
             .then(res => {
-                if (!res.ok) throw new Error("Chapter not found");
+                if (!res.ok) throw new Error(`El capítulo ${currentChapter} no pudo ser cargado.`);
                 return res.json();
             })
             .then((json: ChapterData) => {
                 setData(json);
-                setCurrentIndex(0); // Muestra el primer mensaje automáticamente
+                setCurrentIndex(0);
+                setShowSystemLogs(true);
             })
             .catch(err => {
-                console.warn("End of book or missing file", err);
+                setError(err.message);
             });
-    }, [currentBook, currentChapter]);
+    }, [currentBook, currentChapter, view]);
 
     // Auto-scroll to bottom
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, [currentIndex, isAdvancing]);
+    }, [currentIndex, isAdvancing, showSystemLogs]);
+
+    // Sound sync
+    useLayoutEffect(() => {
+        if (currentIndex < 0 || !data || view !== 'chat') return;
+        const msg = data.messages[currentIndex];
+        if (msg && msg.speaker !== 'Narrador' && !msg.isSectionTitle) {
+            playPop();
+        }
+    }, [currentIndex, data, view]);
 
     const visibleMessages = data ? data.messages.slice(0, currentIndex + 1) : [];
     const nextMessage = data && (currentIndex + 1 < data.messages.length) ? data.messages[currentIndex + 1] : null;
     const isComplete = data ? (!nextMessage && currentIndex >= 0) : false;
 
-    const lastSectionTitleMessage = visibleMessages.slice().reverse().find(msg => msg.isSectionTitle);
+    const lastSectionTitleMessage = visibleMessages.slice().reverse().find((msg: Message) => msg.isSectionTitle);
     const activeSubtitle = lastSectionTitleMessage ? lastSectionTitleMessage.text : (data?.title || '');
 
     const isNextSectionTitle = nextMessage && nextMessage.isSectionTitle;
-    const isNextSystem = nextMessage && !isNextSectionTitle && (nextMessage.speaker === 'Dios' || nextMessage.speaker === 'Narrador');
-    const isNextUser = nextMessage && !isNextSystem;
+    const isNextUser = nextMessage && (nextMessage.speaker !== 'Dios' && nextMessage.speaker !== 'Narrador' && !nextMessage.isSectionTitle);
 
-    // Auto-advance logic for system messages
+    // Auto-advance logic
     useEffect(() => {
-        if (!nextMessage || isNextUser) return;
+        if (!nextMessage || isNextUser || !data || view !== 'chat') return;
 
         let isMounted = true;
         const autoAdvance = async () => {
             setIsAdvancing(true);
-
-            // Calculamos el tiempo de lectura del mensaje actual (el último que apareció)
-            // Velocidad promedio de lectura: ~35ms por carácter (aprox 250 palabras por minuto)
-            const currentMessage = currentIndex >= 0 && data ? data.messages[currentIndex] : null;
-            const readingTime = currentMessage ? Math.max(currentMessage.text.length * 35, 1500) : 1000;
-
-            // Calculamos el tiempo de escritura para el siguiente mensaje
-            const typingTime = Math.max(nextMessage.text.length * 30, 1500);
+            const currentMessage = currentIndex >= 0 ? data.messages[currentIndex] : null;
+            const readingTime = currentMessage ? Math.max(currentMessage.text.length * 100, 4000) : 3000;
+            const typingTime = Math.max(nextMessage.text.length * 80, 3500);
 
             let delay = 0;
             if (nextMessage.speaker === 'Narrador') {
-                // El narrador no muestra indicador de "escribiendo", la pausa es el tiempo para leer el mensaje anterior completo.
-                delay = Math.min(readingTime + 800, 8000); // Pausa máxima de 8 segundos
+                delay = Math.min(readingTime + 2000, 15000);
+            } else if (nextMessage.isSectionTitle) {
+                return;
             } else {
-                // Si es un personaje (Dios), la animación de escribiendo es el tiempo de tipeo más un margen del tiempo de lectura anterior.
-                delay = Math.min(typingTime + (readingTime * 0.4), 8000);
+                delay = Math.min(typingTime + (readingTime * 0.3), 15000);
             }
 
             await new Promise(r => setTimeout(r, delay));
 
-            if (isMounted) {
-                setCurrentIndex(prev => prev + 1);
+            if (isMounted && view === 'chat') {
+                setCurrentIndex((prev: number) => prev + 1);
                 setIsAdvancing(false);
             }
         };
 
         autoAdvance();
-
-        return () => {
-            isMounted = false;
-            setIsAdvancing(false);
-        };
-    }, [nextMessage, isNextUser, currentIndex, data]);
-
-    if (!data) return <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center font-display font-bold">CARGANDO...</div>;
+        return () => { isMounted = false; setIsAdvancing(false); };
+    }, [nextMessage, isNextUser, currentIndex, data, view]);
 
     const handleNextMessageClick = async () => {
         if (!nextMessage || isAdvancing || !isNextUser) return;
-
         setIsAdvancing(true);
-        // Instant sending for user
-        setCurrentIndex(prev => prev + 1);
+        setCurrentIndex((prev: number) => prev + 1);
         setIsAdvancing(false);
     };
 
     const toggleLike = (id: string) => {
-        setLikedMessages(prev => {
+        setLikedMessages((prev: Set<string>) => {
             const newSet = new Set(prev);
             if (newSet.has(id)) newSet.delete(id);
             else newSet.add(id);
@@ -158,213 +229,275 @@ export default function App() {
         });
     };
 
-    return (
-        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center sm:p-4 md:p-8 lg:p-12 transition-all duration-300">
+    const handleBookSelect = (bookId: string) => {
+        const initialChap = getInitialChapter(bookId);
+        setCurrentBook(bookId);
+        setCurrentChapter(initialChap);
+        setView('chat');
+    };
 
-            {/* Application Container */}
-            <main className="w-full max-w-full sm:max-w-md md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl bg-white sm:naas-border sm:naas-shadow flex flex-col h-[100dvh] sm:h-[90vh] lg:h-[85vh] relative overflow-hidden transition-all duration-300 mx-auto" data-viewport-scope="hero">
-
-                {/* Header - AIDA Phase 1: Attention */}
-                <header data-aida="attention" className="border-b-2 border-[#0A0A0A] bg-[#FAFAFA] shrink-0 p-4 md:p-6 lg:p-8 sticky top-0 z-10 flex items-center justify-between transition-all duration-300">
-                    <div className="flex items-center gap-3 md:gap-5">
-                        <button
-                            onClick={() => setCurrentChapter(prev => Math.max(1, prev - 1))}
-                            disabled={currentChapter <= 1}
-                            className={`p-1.5 md:p-2.5 naas-border transition-colors ${currentChapter <= 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-[#EAEAEA]'}`}
-                        >
-                            <ArrowLeft className="w-5 h-5 md:w-7 md:h-7 text-[#0A0A0A]" strokeWidth={2.5} />
-                        </button>
+    // --- RENDER HOME ---
+    if (view === 'home') {
+        return (
+            <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center sm:p-4 md:p-8">
+                <main className="w-full max-w-6xl bg-white sm:naas-border sm:naas-shadow flex flex-col h-[100dvh] sm:h-[90vh] overflow-hidden transition-all duration-300 mx-auto font-display">
+                    <header className="border-b-2 border-black bg-[#FFD600] p-6 flex items-center justify-between shrink-0">
                         <div className="flex flex-col">
-                            <h1 className="text-xl md:text-3xl lg:text-4xl font-display font-black leading-none">{data.book} {data.chapter}</h1>
-                            <motion.span
-                                key={activeSubtitle}
-                                initial={{ opacity: 0, y: -5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="text-xs md:text-sm lg:text-base font-semibold text-gray-500 uppercase tracking-widest mt-1 md:mt-2"
-                            >
-                                {activeSubtitle}
-                            </motion.span>
+                            <h1 className="text-3xl font-black uppercase tracking-tighter leading-none">BIBLIA CHAT</h1>
+                            <span className="text-[10px] font-black uppercase tracking-widest mt-1 opacity-60">Mensajería Sagrada</span>
                         </div>
-                    </div>
-                    {/* Botón de opciones visuales ficticio por ahora */}
-                    <button className="p-1.5 md:p-2.5 hover:bg-[#EAEAEA] naas-border transition-colors">
-                        <MoreVertical className="w-5 h-5 md:w-7 md:h-7 text-[#0A0A0A]" strokeWidth={2.5} />
-                    </button>
-                </header>
+                        <div className="flex gap-4">
+                            <button className="p-2 hover:bg-black/10 rounded-full transition-colors"><Search className="w-6 h-6" /></button>
+                            <button className="p-2 hover:bg-black/10 rounded-full transition-colors"><MoreVertical className="w-6 h-6" /></button>
+                        </div>
+                    </header>
 
-                {/* Chat Feed - AIDA Phase 2: Interest */}
-                <section
-                    ref={scrollRef}
-                    data-aida="interest"
-                    className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 lg:p-12 bg-[#FAFAFA] scroll-smooth"
-                >
-                    <div className="max-w-4xl mx-auto w-full space-y-6 md:space-y-10 pb-32 md:pb-48">
-
-                        <AnimatePresence initial={false}>
-                            {visibleMessages.map((msg) => {
-                                if (msg.isSectionTitle) {
-                                    return (
-                                        <motion.div
-                                            key={msg.id}
-                                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                                            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                                            className="text-center my-8 md:my-14"
-                                        >
-                                            <span className="inline-block bg-white text-[#0A0A0A] naas-border naas-shadow-sm px-4 py-2 md:px-5 md:py-2 text-[10px] md:text-xs font-bold uppercase tracking-wider text-center">
-                                                {msg.text}
-                                            </span>
-                                        </motion.div>
-                                    );
-                                }
-
-                                const isGod = msg.speaker === 'Dios';
-                                const isNarrator = msg.speaker === 'Narrador';
-                                const isLiked = likedMessages.has(msg.id);
-
-                                if (isNarrator) {
-                                    return (
-                                        <motion.div
-                                            key={msg.id}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                                            className="flex flex-col items-center my-6 md:my-10 relative"
-                                            onDoubleClick={() => toggleLike(msg.id)}
-                                        >
-                                            <div className="cursor-pointer select-none max-w-[85%] sm:max-w-md md:max-w-xl lg:max-w-2xl bg-[#EAEAEA] border border-dashed border-[#0A0A0A] p-3 md:p-6 text-sm md:text-base lg:text-lg font-medium text-center text-gray-800 relative naas-interactive transition-all duration-300">
-                                                <span className="text-[10px] md:text-xs font-bold text-gray-500 block mb-1 md:mb-2 uppercase tracking-widest">v.{msg.verse} NARRADOR</span>
-                                                {msg.text}
-                                                {/* Heart icon for Narrator */}
-                                                <AnimatePresence>
-                                                    {isLiked && (
-                                                        <motion.div
-                                                            initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                                                            className="absolute -bottom-3 -right-3 md:-bottom-4 md:-right-4 bg-red-500 text-white rounded-full p-1.5 md:p-2 border-2 border-black shadow-[2px_2px_0_#0A0A0A]"
-                                                        >
-                                                            <Heart className="w-3 h-3 md:w-5 md:h-5 fill-current" />
-                                                        </motion.div>
-                                                    )}
-                                                </AnimatePresence>
-                                            </div>
-                                        </motion.div>
-                                    );
-                                }
-
+                    <section className="flex-1 overflow-y-auto bg-white">
+                        <div className="divide-y-2 divide-gray-100 italic p-4 text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                            Selecciona una revelación para continuar
+                        </div>
+                        <div className="divide-y-2 divide-gray-100">
+                            {BIBLE_BOOKS.map((book) => {
+                                const lastChap = Number(localStorage.getItem(`lastChapter_${book.id}`)) || book.availableChapters[0];
                                 return (
-                                    <motion.div
-                                        key={msg.id}
-                                        initial={{ opacity: 0, x: isGod ? -20 : 20, scale: 0.95 }}
-                                        animate={{ opacity: 1, x: 0, scale: 1 }}
-                                        transition={{ type: "spring", stiffness: 250, damping: 20 }}
-                                        className={`flex flex-col mx-2 md:mx-4 ${isGod ? 'items-start' : 'items-end'} w-full relative z-0`}
+                                    <button
+                                        key={book.id}
+                                        onClick={() => handleBookSelect(book.id)}
+                                        className="w-full p-5 md:p-6 flex items-center gap-4 md:gap-6 hover:bg-gray-50 transition-all text-left active:bg-gray-100 group"
                                     >
-                                        <div className={`flex items-end gap-2 md:gap-4 lg:gap-5 max-w-[85%] sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl ${isGod ? 'flex-row' : 'flex-row-reverse'}`}>
-
-                                            {/* Avatar */}
-                                            <div className={`w-8 h-8 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center shrink-0 naas-border naas-shadow-sm
-                      ${isGod ? 'bg-[#FFD600]' : 'bg-white'}`}>
-                                                <span className="text-xs md:text-sm lg:text-base font-black">{msg.speaker[0]}</span>
+                                        <div className="w-14 h-14 md:w-16 md:h-16 rounded-full naas-border bg-white flex items-center justify-center shrink-0 naas-shadow-sm group-hover:shadow-[4px_4px_0_#FFD600] transition-all">
+                                            <Users className="w-6 h-6 md:w-8 md:h-8" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex justify-between items-center mb-1">
+                                                <h2 className="text-lg md:text-xl font-black uppercase truncate">{book.name}</h2>
+                                                <span className="text-[10px] font-bold text-gray-400">Cap {lastChap}</span>
                                             </div>
-
-                                            {/* Bubble */}
-                                            <div
-                                                onDoubleClick={() => toggleLike(msg.id)} // Double click to like!
-                                                className={`cursor-pointer select-none group naas-border p-3 md:p-5 lg:p-6 flex flex-col relative transition-all duration-300
-                                                ${isGod ? 'bg-white rounded-r-xl rounded-tl-xl md:rounded-r-2xl md:rounded-tl-2xl lg:rounded-r-3xl lg:rounded-tl-3xl' : 'bg-[#EAEAEA] rounded-l-xl rounded-tr-xl md:rounded-l-2xl md:rounded-tr-2xl lg:rounded-l-3xl lg:rounded-tr-3xl'}
-                                                ${isGod ? 'naas-shadow-sm md:shadow-[4px_4px_0_#0A0A0A]' : ''}
-                                            `}
-                                            >
-                                                <div className="flex items-center justify-between gap-6 md:gap-8 mb-1 md:mb-2 lg:mb-3">
-                                                    <span className="text-[10px] md:text-xs lg:text-sm font-black uppercase tracking-wider">{msg.speaker}</span>
-                                                    <span className="text-[10px] md:text-xs lg:text-sm font-bold text-gray-400 group-hover:text-gray-600 transition-colors">v.{msg.verse}</span>
-                                                </div>
-                                                <p className={`text-[15px] md:text-lg lg:text-xl xl:text-2xl leading-snug md:leading-relaxed m-0 ${isGod ? 'font-bold font-display text-gray-900' : 'font-medium text-gray-800'}`}>
-                                                    {msg.text}
+                                            <div className="flex items-center justify-between">
+                                                <p className="text-xs md:text-sm text-gray-400 font-medium truncate leading-tight pr-4">
+                                                    {book.description}
                                                 </p>
-
-                                                {/* Instagram-style floating Heart Like */}
-                                                <AnimatePresence>
-                                                    {isLiked && (
-                                                        <motion.div
-                                                            initial={{ scale: 0, translateY: 10 }}
-                                                            animate={{ scale: 1, translateY: 0 }}
-                                                            exit={{ scale: 0, translateY: 10 }}
-                                                            className={`absolute -bottom-3 ${isGod ? '-right-3 md:-right-4' : '-left-3 md:-left-4'} md:-bottom-4 bg-red-500 text-white rounded-full p-1.5 md:p-2 border-2 border-black shadow-[2px_2px_0_#0A0A0A]`}
-                                                        >
-                                                            <Heart className="w-4 h-4 md:w-5 md:h-5 fill-current" />
-                                                        </motion.div>
-                                                    )}
-                                                </AnimatePresence>
+                                                <CheckCheck className="w-4 h-4 text-blue-500 opacity-60 shrink-0" />
+                                            </div>
+                                            <div className="mt-2 text-[10px] font-black text-[#FFD600] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                                                Continuar lectura →
                                             </div>
                                         </div>
-                                    </motion.div>
+                                    </button>
                                 );
                             })}
-                        </AnimatePresence>
+                        </div>
+                    </section>
 
-                        {/* Typing Indicator if there is a pending message */}
-                        <AnimatePresence>
+                    <nav className="border-t-2 border-black bg-[#FAFAFA] p-4 flex justify-around items-center shrink-0">
+                        <div className="flex flex-col items-center gap-1 cursor-pointer">
+                            <MessageSquare className="w-6 h-6" />
+                            <span className="text-[8px] font-black uppercase">CHATS</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-1 opacity-20 cursor-not-allowed">
+                            <Users className="w-6 h-6" />
+                            <span className="text-[8px] font-black uppercase">COMUNIDAD</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-1 opacity-20 cursor-not-allowed">
+                            <Book className="w-6 h-6" />
+                            <span className="text-[8px] font-black uppercase">LIBROS</span>
+                        </div>
+                    </nav>
+                </main>
+            </div>
+        );
+    }
+
+    // --- RENDER CHAT ---
+    const bookConfig = BIBLE_BOOKS.find(b => b.id === currentBook);
+
+    return (
+        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center sm:p-4 md:p-8 transition-all duration-300 font-display">
+            {/* Main Application Window */}
+            <main className="w-full max-w-6xl bg-white sm:naas-border sm:naas-shadow flex flex-col h-[100dvh] sm:h-[90vh] relative overflow-hidden transition-all duration-300 mx-auto">
+                {/* Fixed Header */}
+                <header className="border-b-2 border-[#0A0A0A] bg-[#FAFAFA] p-4 md:p-6 sticky top-0 z-50 flex items-center justify-between shrink-0 h-20 md:h-24 transition-all">
+                    <div className="flex items-center gap-4 min-w-0 h-full">
+                        <button onClick={() => setView('home')} className="p-2 naas-border hover:bg-gray-100 transition-colors shrink-0">
+                            <ArrowLeft className="w-6 h-6 text-[#0A0A0A]" strokeWidth={2.5} />
+                        </button>
+                        <div className="min-w-0 text-left flex flex-col justify-center">
+                            <button onClick={() => setShowChapterSelector(!showChapterSelector)} className="flex items-center gap-2 group max-w-full">
+                                <h1 className="text-xl md:text-2xl font-black leading-none uppercase truncate">{bookConfig?.name} • Cap {currentChapter}</h1>
+                                <ChevronDown className={`w-5 h-5 transition-transform shrink-0 ${showChapterSelector ? 'rotate-180' : ''}`} strokeWidth={3} />
+                            </button>
+                            <span className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-[0.2em] block truncate mt-1">{activeSubtitle}</span>
+                        </div>
+                    </div>
+
+                    {/* Floating Chapter Selector Sidebar/Popover */}
+                    <AnimatePresence>
+                        {showChapterSelector && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="absolute top-[90%] left-4 right-4 bg-white border-2 border-black z-[100] p-6 naas-shadow grid grid-cols-4 md:grid-cols-8 gap-2 max-h-64 overflow-y-auto"
+                            >
+                                {bookConfig?.availableChapters.map(chap => (
+                                    <button
+                                        key={chap}
+                                        onClick={() => { setCurrentChapter(chap); setShowChapterSelector(false); }}
+                                        className={`p-3 naas-border font-black text-sm transition-all ${currentChapter === chap ? 'bg-[#FFD600]' : 'hover:bg-gray-100'}`}
+                                    >
+                                        {chap}
+                                    </button>
+                                ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    <button className="p-2 naas-border hover:bg-gray-100 shrink-0"><MoreVertical className="w-6 h-6" strokeWidth={2.5} /></button>
+                </header>
+
+                {/* Scrollable Chat Area */}
+                <section ref={scrollRef} className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 bg-[#FAFAFA] space-y-8 scroll-smooth pb-40">
+                    {error ? (
+                        <div className="py-20 flex flex-col items-center text-center opacity-40 italic">
+                            <RefreshCw className="w-10 h-10 mb-4 animate-spin" />
+                            <p className="font-black uppercase text-xs tracking-widest">{error}</p>
+                            <p className="text-[10px] mt-2">Capítulo no disponible en la base de datos local</p>
+                        </div>
+                    ) : (data && visibleMessages.length > 0) ? (
+                        <>
+                            {showSystemLogs && (
+                                <div className="flex flex-col items-center gap-3 mb-10 opacity-60">
+                                    <div className="flex items-center gap-2 bg-gray-200 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">
+                                        <ShieldCheck className="w-3 h-3" /> El Espíritu Santo ha creado este grupo hace eones
+                                    </div>
+                                    <div className="flex items-center gap-2 bg-gray-200 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">
+                                        <MessageSquare className="w-3 h-3" /> Te has unido al grupo de {bookConfig?.name}
+                                    </div>
+                                </div>
+                            )}
+
+                            <AnimatePresence initial={false}>
+                                {visibleMessages.map((msg: Message) => {
+                                    if (msg.isSectionTitle) {
+                                        return (
+                                            <motion.div key={msg.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center my-12">
+                                                <span className="inline-block bg-[#FFD600] text-[#0A0A0A] naas-border naas-shadow-sm px-6 py-2 text-xs font-black uppercase tracking-widest">{msg.text}</span>
+                                            </motion.div>
+                                        );
+                                    }
+
+                                    const isGod = msg.speaker === 'Dios';
+                                    const isLiked = likedMessages.has(`${currentBook}_${msg.id}`);
+
+                                    if (msg.speaker === 'Narrador') {
+                                        return (
+                                            <motion.div key={msg.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-center" onDoubleClick={() => toggleLike(`${currentBook}_${msg.id}`)}>
+                                                <div className="cursor-pointer max-w-2xl bg-[#EAEAEA] border border-dashed border-[#0A0A0A] p-6 text-center relative font-medium text-gray-800 transition-colors hover:bg-[#F2F2F2]">
+                                                    <span className="text-[10px] font-black text-gray-400 block mb-2 uppercase tracking-widest">v.{msg.verse} NARRADOR</span>
+                                                    {msg.text}
+                                                    <AnimatePresence>
+                                                        {isLiked && (
+                                                            <motion.div
+                                                                initial={{ scale: 0 }}
+                                                                animate={{ scale: 1 }}
+                                                                exit={{ scale: 0 }}
+                                                                className="absolute -bottom-3 -right-3 md:-bottom-4 md:-right-4 bg-red-500 text-white rounded-full p-2 border-2 border-black shadow-[2px_2px_0_#0A0A0A]"
+                                                            >
+                                                                <Heart className="w-4 h-4 md:w-5 md:h-5 fill-current" />
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    }
+
+                                    return (
+                                        <motion.div key={msg.id} initial={{ opacity: 0, x: isGod ? -20 : 20 }} animate={{ opacity: 1, x: 0 }} className={`flex flex-col ${isGod ? 'items-start' : 'items-end'} w-full`}>
+                                            <div className={`flex items-end gap-3 max-w-[85%] ${isGod ? 'flex-row' : 'flex-row-reverse'}`}>
+                                                <div className={`w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full flex items-center justify-center naas-border naas-shadow-sm font-black shrink-0 ${isGod ? 'bg-[#FFD600]' : 'bg-white'} transition-all`}>
+                                                    {msg.speaker[0]}
+                                                </div>
+                                                <div
+                                                    onDoubleClick={() => toggleLike(`${currentBook}_${msg.id}`)}
+                                                    className={`cursor-pointer naas-border p-4 md:p-6 transition-all relative ${isGod ? 'bg-white rounded-r-2xl rounded-tl-2xl naas-shadow-sm hover:shadow-[4px_4px_0_#FFD600]' : 'bg-[#EAEAEA] rounded-l-2xl rounded-tr-2xl hover:bg-[#DEDEDE]'}`}
+                                                >
+                                                    <div className="flex justify-between gap-8 mb-2">
+                                                        <span className="text-xs font-black uppercase tracking-tight">{msg.speaker}</span>
+                                                        <span className="text-xs font-bold text-gray-400">v.{msg.verse}</span>
+                                                    </div>
+                                                    <p className={`text-base md:text-xl lg:text-2xl ${isGod ? 'font-black text-black leading-tight' : 'font-medium text-gray-800'}`}>{msg.text}</p>
+                                                    <AnimatePresence>
+                                                        {isLiked && (
+                                                            <motion.div
+                                                                initial={{ scale: 0, y: 10 }}
+                                                                animate={{ scale: 1, y: 0 }}
+                                                                exit={{ scale: 0, y: 10 }}
+                                                                className={`absolute -bottom-3 ${isGod ? '-right-3 md:-right-4' : '-left-3 md:-left-4'} md:-bottom-4 bg-red-500 text-white rounded-full p-2 border-2 border-black shadow-[2px_2px_0_#0A0A0A]`}
+                                                            >
+                                                                <Heart className="w-4 h-4 md:w-5 md:h-5 fill-current" />
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </AnimatePresence>
+
                             {nextMessage && isAdvancing && nextMessage.speaker !== 'Narrador' && !nextMessage.isSectionTitle && (
                                 <TypingIndicator speaker={nextMessage.speaker} isGod={nextMessage.speaker === 'Dios'} />
                             )}
-                        </AnimatePresence>
-                    </div>
-
+                        </>
+                    ) : (
+                        <div className="py-20 flex flex-col items-center text-center opacity-40 italic">
+                            <RefreshCw className="w-10 h-10 mb-4 animate-spin" />
+                            <p className="font-black uppercase text-xs tracking-widest">Sincronizando la revelación...</p>
+                        </div>
+                    )}
                 </section>
 
-                {/* Input Bar / Bottom Action Area */}
-                <div className="absolute bottom-0 w-full left-0 bg-white border-t-2 border-[#0A0A0A] p-3 md:p-5 lg:p-6 flex items-center justify-center z-30 sm:naas-shadow min-h-[72px] md:min-h-[100px] transition-all duration-300">
-                    <div className="w-full max-w-4xl flex items-center gap-3 md:gap-5 lg:gap-8">
-                        {!isComplete ? (
+                {/* Fixed Bottom Input Bar */}
+                <div className="border-t-2 border-black bg-white p-4 md:p-6 flex justify-center z-50 shrink-0 h-24 md:h-28 transition-all">
+                    <div className="w-full max-w-4xl flex items-center gap-4 h-full">
+                        {!error && data && !isComplete ? (
                             isNextSectionTitle ? (
-                                <motion.button
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    onClick={handleNextMessageClick}
-                                    className="w-full bg-[#FAFAFA] text-[#0A0A0A] py-3 px-4 md:py-4 md:px-6 lg:py-5 lg:px-8 flex items-center justify-center gap-2 md:gap-4 border-2 border-[#0A0A0A] naas-interactive font-black text-sm md:text-lg lg:text-xl tracking-tight shadow-[3px_3px_0_#0A0A0A] md:shadow-[6px_6px_0_#0A0A0A]"
-                                >
-                                    <BookOpen strokeWidth={2.5} className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 mb-[2px]" />
-                                    Siguiente Narración: {nextMessage?.text}
-                                </motion.button>
+                                <button onClick={handleNextMessageClick} className="w-full h-full bg-[#FAFAFA] naas-border font-black uppercase text-xs md:text-lg shadow-[4px_4px_0_#0A0A0A] flex items-center justify-center">
+                                    <BookOpen className="w-5 h-5 mr-3 hidden md:block" /> {nextMessage?.text}
+                                </button>
                             ) : isNextUser ? (
                                 <>
-                                    <button
-                                        className="flex-1 bg-[#FAFAFA] border-2 border-[#0A0A0A] px-4 py-3 md:px-6 md:py-4 text-sm md:text-lg lg:text-xl font-semibold text-gray-800 text-left truncate overflow-hidden relative naas-interactive transition-all duration-300"
-                                        onClick={handleNextMessageClick}
-                                    >
-                                        <span className="opacity-60 text-xs md:text-sm uppercase font-black mr-2 md:mr-3 tracking-widest">{nextMessage?.speaker}:</span>
-                                        {nextMessage?.text}
+                                    <button onClick={handleNextMessageClick} className="flex-1 h-full bg-[#FAFAFA] naas-border px-6 text-left font-semibold text-gray-800 truncate flex flex-col justify-center">
+                                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{nextMessage?.speaker}</span>
+                                        <span className="truncate block leading-tight">{nextMessage?.text}</span>
                                     </button>
-                                    <button
-                                        onClick={handleNextMessageClick}
-                                        disabled={isAdvancing}
-                                        className="bg-[#FFD600] w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center shrink-0 border-2 border-[#0A0A0A] naas-shadow-sm hover:translate-y-[-2px] hover:shadow-[4px_4px_0_#0A0A0A] md:hover:shadow-[6px_6px_0_#0A0A0A] transition-all duration-150 active:scale-95"
-                                    >
-                                        <Send className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-[#0A0A0A] transform translate-x-[1px]" strokeWidth={2.5} />
-                                    </button>
+                                    <button onClick={handleNextMessageClick} className="bg-[#FFD600] w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center naas-border naas-shadow-sm active:scale-95 transition-all outline-none shrink-0"><Send className="w-7 h-7" /></button>
                                 </>
                             ) : (
-                                <div className="flex-1 px-4 py-3 md:py-5 text-sm md:text-lg lg:text-xl font-bold text-gray-400 italic text-center uppercase tracking-widest">
-                                    {nextMessage?.speaker} te está contactando...
+                                <div className="flex-1 h-full flex items-center justify-center font-black text-gray-400 uppercase tracking-[0.3em] italic animate-pulse text-xs md:text-sm">
+                                    {nextMessage?.speaker} ESCRIBIENDO...
                                 </div>
                             )
-                        ) : (
-                            <motion.button
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                onClick={() => setCurrentChapter(prev => prev + 1)}
-                                data-aida="action"
-                                data-cta="primary"
-                                className="w-full bg-[#FFD600] text-[#0A0A0A] py-3 px-4 md:py-5 md:px-6 lg:py-6 lg:px-8 flex items-center justify-center gap-2 md:gap-4 border-2 border-[#0A0A0A] naas-interactive font-black text-lg md:text-2xl lg:text-3xl tracking-tight shadow-[3px_3px_0_#0A0A0A] md:shadow-[6px_6px_0_#0A0A0A]"
+                        ) : error ? (
+                            <button onClick={() => setView('home')} className="w-full h-full bg-[#FFD600] naas-border font-black uppercase shadow-[4px_4px_0_#0A0A0A]">Regresar a la Selección</button>
+                        ) : isComplete ? (
+                            <button
+                                onClick={() => {
+                                    const nextIdx = bookConfig ? bookConfig.availableChapters.indexOf(currentChapter) + 1 : -1;
+                                    if (bookConfig && nextIdx < bookConfig.availableChapters.length) {
+                                        setCurrentChapter(bookConfig.availableChapters[nextIdx]);
+                                    } else {
+                                        setView('home');
+                                    }
+                                }}
+                                className="w-full h-full bg-[#FFD600] naas-border font-black text-lg md:text-2xl uppercase shadow-[6px_6px_0_#0A0A0A] flex items-center justify-center"
                             >
-                                <BookOpen strokeWidth={2.5} className="w-5 h-5 md:w-8 md:h-8 lg:w-10 lg:h-10 mb-[2px]" />
-                                Siguiente Capítulo
-                            </motion.button>
-                        )}
+                                <BookOpen className="w-6 h-6 mr-3" /> {bookConfig && (bookConfig.availableChapters.indexOf(currentChapter) + 1 < bookConfig.availableChapters.length) ? 'Siguiente Capítulo' : 'Finalizar Lectura'}
+                            </button>
+                        ) : null}
                     </div>
                 </div>
-
             </main>
         </div>
     );
