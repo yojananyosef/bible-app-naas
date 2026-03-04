@@ -29,36 +29,36 @@ export const ChatHeader: React.FC<ChatHeaderProps> = (props) => {
                 <button onClick={props.onBack} className="p-2 border-2 border-black hover:bg-gray-100 transition-all shadow-[2px_2px_0_#0A0A0A] active:translate-y-0.5 active:shadow-none shrink-0 bg-white">
                     <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-[#0A0A0A]" strokeWidth={2.5} />
                 </button>
-                <div className="min-w-0 text-left flex flex-col justify-center">
+                <div className="min-w-0 text-left flex flex-col justify-center relative">
                     <button onClick={props.onToggleSelector} className="flex items-center gap-2 group max-w-full outline-none">
                         <h1 className="text-xl md:text-2xl font-black leading-none uppercase truncate">{props.book?.name} • Cap {props.chapter}</h1>
                         <ChevronDown className={`w-5 h-5 transition-transform shrink-0 ${props.isSelectorOpen ? 'rotate-180' : ''}`} strokeWidth={3} />
                     </button>
                     <span className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-[0.2em] block truncate mt-1">{props.subtitle}</span>
+
+                    {/* Selector de Capítulos — positioned below the title */}
+                    <AnimatePresence>
+                        {props.isSelectorOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: -8 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: -8 }}
+                                className="absolute top-full left-0 mt-2 w-[80vw] sm:w-64 bg-white border-2 border-black z-[100] p-4 shadow-[4px_4px_0_#0A0A0A] grid grid-cols-4 gap-2 max-h-64 overflow-y-auto"
+                            >
+                                {props.book?.availableChapters.map(chap => (
+                                    <button
+                                        key={chap}
+                                        onClick={() => props.onSelectChapter(chap)}
+                                        className={`p-2 border-2 border-black font-black text-sm transition-all ${props.chapter === chap ? 'bg-[#FFD600]' : 'hover:bg-gray-100 shadow-[2px_2px_0_#0A0A0A]'}`}
+                                    >
+                                        {chap}
+                                    </button>
+                                ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
 
             <div className="flex items-center gap-2 relative">
-                {/* Selector de Capítulos */}
-                <AnimatePresence>
-                    {props.isSelectorOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-                            className="absolute top-[120%] right-0 w-[80vw] sm:w-64 bg-white border-2 border-black z-[100] p-4 shadow-[4px_4px_0_#0A0A0A] grid grid-cols-4 gap-2 max-h-64 overflow-y-auto"
-                        >
-                            {props.book?.availableChapters.map(chap => (
-                                <button
-                                    key={chap}
-                                    onClick={() => props.onSelectChapter(chap)}
-                                    className={`p-2 border-2 border-black font-black text-sm transition-all ${props.chapter === chap ? 'bg-[#FFD600]' : 'hover:bg-gray-100 shadow-[2px_2px_0_#0A0A0A]'}`}
-                                >
-                                    {chap}
-                                </button>
-                            ))}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
                 <div className="relative">
                     <button
                         onClick={props.onToggleOptions}
