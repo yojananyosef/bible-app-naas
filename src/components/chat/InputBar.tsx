@@ -33,10 +33,13 @@ export const InputBar: React.FC<InputBarProps> = (props) => {
                         <>
                             <button
                                 onClick={props.onManualNext}
-                                className="flex-1 min-h-[56px] bg-[#FAFAFA] border-2 border-black px-4 text-left font-semibold text-gray-800 truncate flex flex-col justify-center active:bg-gray-50 transition-all overflow-hidden"
+                                className={`flex-1 min-h-[56px] border-2 px-4 text-left font-semibold truncate flex flex-col justify-center transition-all overflow-hidden ${props.nextMessage?.speaker === 'Serpiente'
+                                    ? 'bg-[#1A0A0A] border-[#4A0000] text-red-100 active:bg-[#250c0c]'
+                                    : 'bg-[#FAFAFA] border-black text-gray-800 active:bg-gray-50'
+                                    }`}
                             >
-                                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{props.nextMessage?.speaker}</span>
-                                <span className="truncate block leading-tight text-sm sm:text-base">{props.nextMessage?.text}</span>
+                                <span className={`text-[9px] font-black uppercase tracking-widest leading-none mb-1 ${props.nextMessage?.speaker === 'Serpiente' ? 'text-red-400' : 'text-gray-400'}`}>{props.nextMessage?.speaker}</span>
+                                <span className={`truncate block leading-tight text-sm sm:text-base ${props.nextMessage?.speaker === 'Serpiente' ? 'italic' : ''}`}>{props.nextMessage?.text}</span>
                             </button>
                             <button
                                 onClick={props.onManualNext}
@@ -46,7 +49,8 @@ export const InputBar: React.FC<InputBarProps> = (props) => {
                             </button>
                         </>
                     ) : (
-                        <div className="flex-1 h-full flex items-center justify-center font-black text-gray-400 uppercase tracking-[0.2em] italic animate-pulse text-[9px] md:text-sm">
+                        <div className={`flex-1 h-full flex items-center justify-center font-black uppercase tracking-[0.2em] italic animate-pulse text-[9px] md:text-sm ${props.nextMessage?.speaker === 'Serpiente' ? 'text-red-500' : 'text-gray-400'
+                            }`}>
                             {props.nextMessage?.speaker} ESCRIBIENDO...
                         </div>
                     )

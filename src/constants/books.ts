@@ -5,10 +5,10 @@ export const BIBLE_BOOKS: BookInfo[] = [
     {
         id: 'genesis',
         name: 'Génesis',
-        availableChapters: [1],
+        availableChapters: [1, 2, 3],
         category: 'Pentateuco',
         description: 'La creación, la caída y la promesa divina a los patriarcas.',
-        participants: ['Dios', 'Narrador', 'Adán', 'Eva']
+        participants: ['Dios', 'Narrador', 'Adán', 'Eva', 'Serpiente']
     },
     {
         id: 'exodus',

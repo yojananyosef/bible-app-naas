@@ -1,0 +1,256 @@
+{
+    "book": "Génesis",
+    "chapter": 3,
+    "title": "",
+    "messages": [
+        {
+            "id": "g3_sec1",
+            "speaker": "Sistema",
+            "verse": 1,
+            "text": "Desobediencia y caída del hombre",
+            "isSectionTitle": true
+        },
+        {
+            "id": "g3_1a",
+            "speaker": "Narrador",
+            "verse": 1,
+            "text": "La serpiente era más astuta que cualquiera de los otros animales salvajes que el Señor Dios había hecho. Y le preguntó a Eva:"
+        },
+        {
+            "id": "g3_1b",
+            "speaker": "Serpiente",
+            "verse": 1,
+            "text": "¿En serio Dios dijo que no pueden comer del fruto de todos los árboles del jardín?"
+        },
+        {
+            "id": "g3_2a",
+            "speaker": "Narrador",
+            "verse": 2,
+            "text": "Entonces Eva le respondió a la serpiente:"
+        },
+        {
+            "id": "g3_2b",
+            "speaker": "Eva",
+            "verse": 2,
+            "text": "Podemos comer de los árboles del jardín, pero no del fruto del árbol que está en medio del jardín."
+        },
+        {
+            "id": "g3_3",
+            "speaker": "Eva",
+            "verse": 3,
+            "text": "Dios nos dijo: 'No deben comer de ese árbol, y ni siquiera tocarlo, pues de lo contrario morirán'."
+        },
+        {
+            "id": "g3_4a",
+            "speaker": "Narrador",
+            "verse": 4,
+            "text": "La serpiente le dijo a Eva:"
+        },
+        {
+            "id": "g3_4b",
+            "speaker": "Serpiente",
+            "verse": 4,
+            "text": "Por supuesto que no morirán."
+        },
+        {
+            "id": "g3_5",
+            "speaker": "Serpiente",
+            "verse": 5,
+            "text": "Lo que sucede es que Dios sabe que tan pronto coman de él verán las cosas de una manera distinta, y serán como Dios, conociendo el bien y el mal."
+        },
+        {
+            "id": "g3_6",
+            "speaker": "Narrador",
+            "verse": 6,
+            "text": "Eva vio que el fruto del árbol lucía bueno para comer. El fruto se veía muy atractivo. Y Eva lo deseaba para obtener sabiduría. Así que tomó del fruto y lo comió, y lo compartió con su esposo, que estaba con ella, y él también comió."
+        },
+        {
+            "id": "g3_7",
+            "speaker": "Narrador",
+            "verse": 7,
+            "text": "Tan pronto como comieron del fruto, vieron todo diferente y se dieron cuenta de que estaban desnudos. Así que cosieron hojas de higuera para cubrirse."
+        },
+        {
+            "id": "g3_sec2",
+            "speaker": "Sistema",
+            "verse": 8,
+            "text": "Sentencia por el pecado y promesa de redención",
+            "isSectionTitle": true
+        },
+        {
+            "id": "g3_8",
+            "speaker": "Narrador",
+            "verse": 8,
+            "text": "Al caer la noche, y cuando soplaba la brisa del atardecer, escucharon al Señor caminando en el jardín. Entonces Adán y Eva se escondieron de la presencia del Señor entre los árboles del jardín."
+        },
+        {
+            "id": "g3_9a",
+            "speaker": "Narrador",
+            "verse": 9,
+            "text": "Entonces el Señor llamó a Adán:"
+        },
+        {
+            "id": "g3_9b",
+            "speaker": "Dios",
+            "verse": 9,
+            "text": "¿Dónde estás?"
+        },
+        {
+            "id": "g3_10a",
+            "speaker": "Narrador",
+            "verse": 10,
+            "text": "Adán respondió:"
+        },
+        {
+            "id": "g3_10b",
+            "speaker": "Adán",
+            "verse": 10,
+            "text": "Te escuché caminando por el jardín y me asusté porque estaba desnudo, y por eso me escondí."
+        },
+        {
+            "id": "g3_11a",
+            "speaker": "Narrador",
+            "verse": 11,
+            "text": "El Señor Dios le preguntó:"
+        },
+        {
+            "id": "g3_11b",
+            "speaker": "Dios",
+            "verse": 11,
+            "text": "¿Quién te dijo que estabas desnudo? ¿Acaso comiste del árbol que te dije que no comieras?"
+        },
+        {
+            "id": "g3_12a",
+            "speaker": "Narrador",
+            "verse": 12,
+            "text": "Adán respondió:"
+        },
+        {
+            "id": "g3_12b",
+            "speaker": "Adán",
+            "verse": 12,
+            "text": "Fue la mujer que me diste quien me brindó del fruto del árbol, y yo lo comí."
+        },
+        {
+            "id": "g3_13a",
+            "speaker": "Narrador",
+            "verse": 13,
+            "text": "Entonces el Señor le preguntó a Eva:"
+        },
+        {
+            "id": "g3_13b",
+            "speaker": "Dios",
+            "verse": 13,
+            "text": "¿Por qué has hecho esto?"
+        },
+        {
+            "id": "g3_13c",
+            "speaker": "Narrador",
+            "verse": 13,
+            "text": "Eva respondió:"
+        },
+        {
+            "id": "g3_13d",
+            "speaker": "Eva",
+            "verse": 13,
+            "text": "La serpiente me engañó, y yo lo comí."
+        },
+        {
+            "id": "g3_14a",
+            "speaker": "Narrador",
+            "verse": 14,
+            "text": "Entonces el Señor le dijo a la serpiente:"
+        },
+        {
+            "id": "g3_14b",
+            "speaker": "Dios",
+            "verse": 14,
+            "text": "Por lo que has hecho, serás maldita entre todos los animales. Te arrastrarás sobre tu vientre y comerás polvo mientras vivas."
+        },
+        {
+            "id": "g3_15",
+            "speaker": "Dios",
+            "verse": 15,
+            "text": "Me aseguraré de que tú y tus hijos, así como la mujer y sus hijos, sean enemigos. Uno de sus hijos aplastará tu cabeza, y tú herirás su talón."
+        },
+        {
+            "id": "g3_16a",
+            "speaker": "Narrador",
+            "verse": 16,
+            "text": "Dios le dijo a Eva:"
+        },
+        {
+            "id": "g3_16b",
+            "speaker": "Dios",
+            "verse": 16,
+            "text": "Haré que el embarazo sea más penoso y que dar a luz sea más doloroso. Sin embargo, tendrás deseo por tu esposo y él te gobernará."
+        },
+        {
+            "id": "g3_17a",
+            "speaker": "Narrador",
+            "verse": 17,
+            "text": "Y Dios le dijo a Adán:"
+        },
+        {
+            "id": "g3_17b",
+            "speaker": "Dios",
+            "verse": 17,
+            "text": "Por haber hecho lo que te dijo tu esposa, y comiste del fruto del árbol sobre el cual te dije 'No comas del fruto de este árbol,' el suelo ahora estará maldito por tu culpa. Tendrás que trabajar arduamente para cultivar los alimentos durante toda tu vida."
+        },
+        {
+            "id": "g3_18",
+            "speaker": "Dios",
+            "verse": 18,
+            "text": "Los cultivos tendrán cardos y espinas, y tendrás que comer plantas silvestres."
+        },
+        {
+            "id": "g3_19",
+            "speaker": "Dios",
+            "verse": 19,
+            "text": "Tendrás que sudar para cultivar suficiente comida hasta que mueras y regreses a la tierra. Porque fuiste hecho del polvo de la tierra, y al mismo polvo regresarás."
+        },
+        {
+            "id": "g3_20",
+            "speaker": "Narrador",
+            "verse": 20,
+            "text": "Adán le puso por nombre Eva a su esposa, porque ella sería la madre de todos los seres humanos."
+        },
+        {
+            "id": "g3_21",
+            "speaker": "Narrador",
+            "verse": 21,
+            "text": "El Señor hizo vestiduras con piel de animales para Adán y Eva y los vistió."
+        },
+        {
+            "id": "g3_sec3",
+            "speaker": "Sistema",
+            "verse": 22,
+            "text": "Castigo por el pecado",
+            "isSectionTitle": true
+        },
+        {
+            "id": "g3_22a",
+            "speaker": "Narrador",
+            "verse": 22,
+            "text": "Entonces el Señor miró una vez más:"
+        },
+        {
+            "id": "g3_22b",
+            "speaker": "Dios",
+            "verse": 22,
+            "text": "Veo que los seres humanos se han convertido en uno más como nosotros, y conocen ahora tanto el bien como el mal. Ahora bien, si llegasen a tomar el fruto del árbol de la vida y lo comen, vivirían para siempre."
+        },
+        {
+            "id": "g3_23",
+            "speaker": "Narrador",
+            "verse": 23,
+            "text": "Así que el Señor los expulsó del jardín de Edén. Envió a Adán a cultivar el suelo a partir del cual él mismo fue creado."
+        },
+        {
+            "id": "g3_24",
+            "speaker": "Narrador",
+            "verse": 24,
+            "text": "Después de sacarlos del jardín, el Señor puso al oriente del jardín ángeles y una espada que daba su resplandor en todas las direcciones. Esto con el fin de que no pudieran acceder al árbol de la vida."
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Message } from '../../core/domain/Message';
@@ -15,16 +15,15 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isLiked, 
 
     const isGod = message.speaker === 'Dios';
     const isNarrator = message.speaker === 'Narrador';
+    const isSerpent = message.speaker === 'Serpiente';
     const actorColor = "bg-[#F5F5F5]";
 
     const handleInteraction = (e?: any) => {
-        // Simple double tap detector that works for both click and touch
         const now = Date.now();
         const timeSince = now - lastTap.current;
 
         if (timeSince < 300 && timeSince > 0) {
             onToggleLike(message.id);
-            // Optionally prevent default to stop scrolling or other side effects
             if (e.cancelable) e.preventDefault();
         }
         lastTap.current = now;
@@ -52,6 +51,41 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isLiked, 
                     <span className="text-[10px] font-black text-gray-400 block mb-2 uppercase tracking-widest">v.{message.verse} NARRADOR</span>
                     {message.text}
                     <LikeBadge isLiked={isLiked} position="bottom-right" />
+                </div>
+            </motion.div>
+        );
+    }
+
+    // ── Serpiente: inversa de Dios — solid, matte, NAAS style ──
+    if (isSerpent) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex flex-col items-end w-full"
+            >
+                <div className="flex items-end gap-2 sm:gap-3 max-w-[92%] sm:max-w-[85%] flex-row-reverse">
+                    <Avatar
+                        letter="🐍"
+                        color="bg-[#1A0A0A]"
+                        size="md"
+                        borderColor="border-[#4A0000]"
+                    />
+                    <div
+                        onClick={handleInteraction}
+                        className="p-4 md:p-6 relative border-2 border-[#4A0000] rounded-l-2xl rounded-tr-2xl overflow-visible bg-[#1A0A0A] shadow-[4px_4px_0_#4A0000] cursor-pointer"
+                    >
+                        <div className="flex justify-between gap-8 mb-2">
+                            <span className="text-[10px] font-black uppercase tracking-tight text-red-400">
+                                {message.speaker}
+                            </span>
+                            <span className="text-[10px] font-bold text-red-900">v.{message.verse}</span>
+                        </div>
+                        <p className="text-base md:text-xl lg:text-3xl font-medium text-red-100 italic">
+                            {message.text}
+                        </p>
+                        <LikeBadge isLiked={isLiked} position="bottom-left" />
+                    </div>
                 </div>
             </motion.div>
         );

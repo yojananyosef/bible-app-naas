@@ -45,10 +45,11 @@ export const Surface: React.FC<SurfaceProps> = ({
     );
 };
 
-export const Avatar: React.FC<{ letter: string; color?: string; size?: 'sm' | 'md' | 'lg' }> = ({
+export const Avatar: React.FC<{ letter: string; color?: string; size?: 'sm' | 'md' | 'lg'; borderColor?: string }> = ({
     letter,
     color = "bg-[#FFD600]",
-    size = "md"
+    size = "md",
+    borderColor = "border-[#0A0A0A]"
 }) => {
     const sizeClasses = {
         sm: "w-8 h-8 text-xs",
@@ -57,7 +58,7 @@ export const Avatar: React.FC<{ letter: string; color?: string; size?: 'sm' | 'm
     };
 
     return (
-        <div className={`${sizeClasses[size]} rounded-full border-2 border-[#0A0A0A] shadow-[2px_2px_0_#0A0A0A] ${color} flex items-center justify-center font-black shrink-0`}>
+        <div className={`${sizeClasses[size]} rounded-full border-2 ${borderColor} shadow-[2px_2px_0_#0A0A0A] ${color} flex items-center justify-center font-black shrink-0`}>
             {letter}
         </div>
     );
