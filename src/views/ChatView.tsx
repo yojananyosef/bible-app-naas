@@ -80,7 +80,10 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
     const handleNextChapter = () => {
         const nextIdx = bookConfig ? bookConfig.availableChapters.indexOf(currentChapter) + 1 : -1;
         if (bookConfig && nextIdx >= 0 && nextIdx < bookConfig.availableChapters.length) {
-            setCurrentChapter(bookConfig.availableChapters[nextIdx]);
+            const nextCh = bookConfig.availableChapters[nextIdx];
+            // Clear saved progress so the chapter starts fresh
+            localStorage.removeItem(`chatProgress_${currentBookId}_${nextCh}`);
+            setCurrentChapter(nextCh);
         } else {
             onBack();
         }
@@ -96,7 +99,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ onBack }) => {
                     book={bookConfig} chapter={isMounted ? currentChapter : 1} subtitle={subtitle}
                     onBack={onBack}
                     onToggleSelector={() => setShowSelector(!showSelector)} isSelectorOpen={showSelector}
-                    onSelectChapter={(c) => { setCurrentChapter(c); setShowSelector(false); }}
+                    onSelectChapter={(c) => { localStorage.removeItem(`chatProgress_${currentBookId}_${c}`); setCurrentChapter(c); setShowSelector(false); }}
                     isMuted={isMuted} currentSpeed={readingSpeed}
                     onToggleMute={() => setIsMuted(!isMuted)} onSetSpeed={setReadingSpeed}
                     onShowInfo={() => setShowInfo(true)} onRestart={restartChapter}

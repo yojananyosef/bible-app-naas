@@ -13,10 +13,10 @@ export const BIBLE_BOOKS: BookInfo[] = [
     {
         id: 'exodus',
         name: 'Éxodo',
-        availableChapters: [3, 4],
+        availableChapters: [1, 2, 3, 4],
         category: 'Pentateuco',
         description: 'La liberación épica de Israel de la esclavitud en Egipto y la entrega de la Ley.',
-        participants: ['Dios', 'Moisés', 'Narrador']
+        participants: ['Dios', 'Moisés', 'Narrador', 'Faraón', 'Parteras', 'Hija de Faraón', 'Reuel', 'Jetro', 'Séfora']
     },
     {
         id: 'levitico',

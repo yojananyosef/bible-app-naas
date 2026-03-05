@@ -1,79 +1,203 @@
 {
     "book": "Éxodo",
     "chapter": 3,
-    "title": "El Llamamiento de Moisés",
+    "title": "Moisés y la zarza ardiendo",
     "messages": [
         {
-            "id": "m1",
+            "id": "ex3_sec1",
+            "speaker": "Sistema",
+            "verse": 1,
+            "text": "Moisés y la zarza ardiendo",
+            "isSectionTitle": true
+        },
+        {
+            "id": "ex3_1",
             "speaker": "Narrador",
             "verse": 1,
-            "text": "Apacentando Moisés las ovejas de Jetro su suegro, sacerdote de Madián, llevó las ovejas a través del desierto, y llegó hasta Horeb, monte de Dios."
+            "text": "Moisés era un pastor que cuidaba el rebaño de Jetro, su suegro, el sacerdote de Madián. Condujo el rebaño lejos en el desierto hasta que llegó al monte de Dios, el monte Horeb."
         },
         {
-            "id": "m2",
+            "id": "ex3_2",
             "speaker": "Narrador",
             "verse": 2,
-            "text": "Y se le apareció el Ángel de Jehová en una llama de fuego en medio de una zarza; y él miró, y vio que la zarza ardía en fuego, y la zarza no se consumía."
+            "text": "Allí el ángel del Señor se le apareció en una llama de fuego desde dentro de un arbusto. Moisés miró con atención y vio que, aunque la zarza estaba ardiendo, no se estaba quemando."
         },
         {
-            "id": "m3",
+            "id": "ex3_3",
             "speaker": "Moisés",
             "verse": 3,
-            "text": "Iré yo ahora y veré esta grande visión, por qué causa la zarza no se quema."
+            "text": "Iré a echar un vistazo. Es muy extraño ver un arbusto que no se queme."
         },
         {
-            "id": "m4",
+            "id": "ex3_4a",
             "speaker": "Narrador",
             "verse": 4,
-            "text": "Viendo Jehová que él iba a ver, lo llamó Dios de en medio de la zarza."
+            "text": "Cuando el Señor vio que Moisés venía a echar un vistazo, Dios le llamó desde dentro de la zarza:"
         },
         {
-            "id": "m5",
+            "id": "ex3_4b",
             "speaker": "Dios",
             "verse": 4,
-            "text": "¡Moisés, Moisés!"
+            "text": "¡Moisés! ¡Moisés!"
         },
         {
-            "id": "m6",
+            "id": "ex3_4c",
             "speaker": "Moisés",
             "verse": 4,
-            "text": "Heme aquí."
+            "text": "Aquí estoy."
         },
         {
-            "id": "m7",
+            "id": "ex3_5",
             "speaker": "Dios",
             "verse": 5,
-            "text": "No te acerques; quita tu calzado de tus pies, porque el lugar en que tú estás, tierra santa es. Yo soy el Dios de tu padre, Dios de Abraham, Dios de Isaac, y Dios de Jacob."
+            "text": "¡No te acerques más! Quítate las sandalias porque estás parado en tierra sagrada."
         },
         {
-            "id": "m8",
+            "id": "ex3_6a",
+            "speaker": "Dios",
+            "verse": 6,
+            "text": "Soy el Dios de tu padre, el Dios de Abraham, el Dios de Isaac y el Dios de Jacob."
+        },
+        {
+            "id": "ex3_6b",
             "speaker": "Narrador",
             "verse": 6,
-            "text": "Entonces Moisés cubrió su rostro, porque tuvo miedo de mirar a Dios."
+            "text": "Moisés se cubrió el rostro, porque tuvo miedo de mirar a Dios."
         },
         {
-            "id": "m9",
+            "id": "ex3_sec2",
+            "speaker": "Sistema",
+            "verse": 7,
+            "text": "Misión de Moisés",
+            "isSectionTitle": true
+        },
+        {
+            "id": "ex3_7",
             "speaker": "Dios",
             "verse": 7,
-            "text": "Bien he visto la aflicción de mi pueblo que está en Egipto, y he oído su clamor a causa de sus exactores; pues he conocido sus angustias."
+            "text": "Soy plenamente consciente de la miseria de mi pueblo en Egipto. Los he escuchado gemir por culpa de sus capataces. Sé cuánto están sufriendo."
         },
         {
-            "id": "m10",
+            "id": "ex3_8",
+            "speaker": "Dios",
+            "verse": 8,
+            "text": "Por eso he descendido para rescatarlos de la opresión egipcia y para llevarlos desde ese país a una tierra fértil y amplia, una tierra donde fluye leche y miel, donde actualmente viven los cananeos, los hititas, los amorreos, los ferezeos, los heveos y los jebuseos."
+        },
+        {
+            "id": "ex3_9",
+            "speaker": "Dios",
+            "verse": 9,
+            "text": "Escucha ahora: El clamor de los israelitas ha llegado hasta mí, y he visto cómo los egipcios los maltratan."
+        },
+        {
+            "id": "ex3_10",
             "speaker": "Dios",
             "verse": 10,
-            "text": "Ven, por tanto, ahora, y te enviaré a Faraón, para que saques de Egipto a mi pueblo, los hijos de Israel."
+            "text": "Ahora debes irte, porque yo te envío donde el Faraón para que saques a mi pueblo Israel de Egipto."
         },
         {
-            "id": "m11",
+            "id": "ex3_11a",
+            "speaker": "Narrador",
+            "verse": 11,
+            "text": "Pero Moisés le dijo a Dios:"
+        },
+        {
+            "id": "ex3_11b",
             "speaker": "Moisés",
             "verse": 11,
-            "text": "¿Quién soy yo para que vaya a Faraón, y saque de Egipto a los hijos de Israel?"
+            "text": "¿Por qué yo? ¡Yo soy un don nadie! ¡No podré ir ante el Faraón y sacar a los israelitas de Egipto!"
         },
         {
-            "id": "m12",
+            "id": "ex3_12",
             "speaker": "Dios",
             "verse": 12,
-            "text": "Ve, porque yo estaré contigo; y esto te será por señal de que yo te he enviado: cuando hayas sacado de Egipto al pueblo, serviréis a Dios sobre este monte."
+            "text": "Yo estaré contigo, y esta será la señal de que soy yo quien te envía: cuando hayas sacado al pueblo de Egipto, adorarás a Dios en este mismo monte."
+        },
+        {
+            "id": "ex3_sec3",
+            "speaker": "Sistema",
+            "verse": 13,
+            "text": "El nombre de Dios",
+            "isSectionTitle": true
+        },
+        {
+            "id": "ex3_13a",
+            "speaker": "Narrador",
+            "verse": 13,
+            "text": "Entonces Moisés dijo a Dios:"
+        },
+        {
+            "id": "ex3_13b",
+            "speaker": "Moisés",
+            "verse": 13,
+            "text": "Mira, si yo fuera donde los israelitas y les dijera: 'El Dios de sus padres me ha enviado a ustedes', y ellos me preguntaran: '¿Cómo se llama?', ¿qué les diré entonces?"
+        },
+        {
+            "id": "ex3_14a",
+            "speaker": "Narrador",
+            "verse": 14,
+            "text": "Dios le respondió a Moisés:"
+        },
+        {
+            "id": "ex3_14b",
+            "speaker": "Dios",
+            "verse": 14,
+            "text": "'Yo soy' el que soy. Dile esto a los israelitas: 'Yo soy' me ha enviado a ustedes."
+        },
+        {
+            "id": "ex3_15",
+            "speaker": "Dios",
+            "verse": 15,
+            "text": "Diles a los israelitas: 'El Señor, el Dios de sus padres, el Dios de Abraham, el Dios de Isaac y el Dios de Jacob, me ha enviado a ustedes. Este es mi nombre para siempre, el nombre con el que me llamarás en todas las generaciones futuras'."
+        },
+        {
+            "id": "ex3_sec4",
+            "speaker": "Sistema",
+            "verse": 16,
+            "text": "Instrucciones de Dios a Moisés",
+            "isSectionTitle": true
+        },
+        {
+            "id": "ex3_16",
+            "speaker": "Dios",
+            "verse": 16,
+            "text": "Ve y llama a todos los ancianos de Israel para que se reúnan contigo. Diles: 'El Señor, el Dios de tus padres, se me ha aparecido, el Dios de Abraham, Isaac y Jacob. Él dijo: He prestado mucha atención a lo que te ha pasado en Egipto."
+        },
+        {
+            "id": "ex3_17",
+            "speaker": "Dios",
+            "verse": 17,
+            "text": "He decidido sacarlos de la miseria que están teniendo en Egipto y llevarlos a la tierra de los cananeos, hititas, amorreos, ferezeos, heveos y jebuseos, una tierra que fluye leche y miel'."
+        },
+        {
+            "id": "ex3_18",
+            "speaker": "Dios",
+            "verse": 18,
+            "text": "Los ancianos de Israel aceptarán lo que tú digas. Entonces debes ir con ellos al rey de Egipto y decirle: 'El Señor, el Dios de los hebreos se nos ha revelado. Así que, por favor, hagamos un viaje de tres días al desierto para poder ofrecer sacrificios al Señor nuestro Dios allí'."
+        },
+        {
+            "id": "ex3_19",
+            "speaker": "Dios",
+            "verse": 19,
+            "text": "Pero sé que el rey de Egipto no te dejará ir a menos que se vea obligado a hacerlo por un poder más fuerte que él."
+        },
+        {
+            "id": "ex3_20",
+            "speaker": "Dios",
+            "verse": 20,
+            "text": "Así que usaré mi poder para infligir a Egipto todas las cosas aterradoras que estoy a punto de hacerles. Después de eso los dejará ir."
+        },
+        {
+            "id": "ex3_21",
+            "speaker": "Dios",
+            "verse": 21,
+            "text": "Haré que los egipcios los traten bien como pueblo, para que cuando se vayan, no se vayan con las manos vacías."
+        },
+        {
+            "id": "ex3_22",
+            "speaker": "Dios",
+            "verse": 22,
+            "text": "Toda mujer pedirá joyas y ropa de plata y oro a su vecina y a toda mujer que viva en su casa, y se las pondrá a sus hijos e hijas. De esta manera se llevarán la riqueza de los egipcios con ustedes."
         }
     ]
 }
